@@ -4,6 +4,8 @@ import session from "express-session";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import constructorMethod from "./routes/index.js";
+import configRoutes from "./routes/index.js";
+import { createUserIndexes} from "./data/users.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,9 +33,21 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
 // Routes
 constructorMethod(app);
+configRoutes(app);
+
+const start = async () => {
+  await createUserIndexes();
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
+};
+
+start();

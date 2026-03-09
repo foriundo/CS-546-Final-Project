@@ -51,6 +51,9 @@ nav {
   list-style: none;
   display: flex;
   gap: 1.5rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a {
@@ -140,6 +143,12 @@ h2 {
   background-color: #2e2e5e;
 }
 
+.logout-button {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #000;
+  border-radius: 4px;
+}
+
 /* 13. Forms */
 .form-group {
   margin-bottom: 1rem;
@@ -151,7 +160,33 @@ h2 {
   font-weight: bold;
 }
 
-.form-group input,
+.form-group input {
+  display: block;
+  width: 250px;
+  max-width: 100%;
+}
+
+.form-hint {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.password-wrapper input {
+  width: 250px;
+  max-width: 100%;
+}
+
+.password-wrapper button {
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
 .form-group select {
   width: 100%;
   padding: 0.5rem;
