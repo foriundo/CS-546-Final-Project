@@ -5,7 +5,6 @@ A web application to help NYC residents find public computer centers across the 
 ## Team
 - Joey Nadeau
 - Fernando Oriundo
-- Layton Avery
 - Shane Malinak
 - Mohammed Khudhur
 
