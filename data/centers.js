@@ -1,9 +1,9 @@
 import { centers } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
-const DAY_FIELDS = ["sun_open", "mon_open", "tue_open", "wed_open", "thu_open", "fri_open", "sat_open"];
+const dayFields = ["sun_open", "mon_open", "tue_open", "wed_open", "thu_open", "fri_open", "sat_open"];
 
-// escape special regex characters in user-supplied strings
+// needed this so regex doesn't break on weird input
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const getAllCenters = async () => {
@@ -28,7 +28,7 @@ const getCentersByFilter = async (filters = {}) => {
   }
 
   if (filters.deviceType) {
-    // type_of_device_available is a comma-separated string, so use regex to match any entry
+    // device field is comma-separated so just check if the string is in there
     query.type_of_device_available = {
       $regex: escapeRegex(filters.deviceType),
       $options: "i",
@@ -43,11 +43,11 @@ const getCentersByFilter = async (filters = {}) => {
   }
 
   if (filters.operatingStatus) {
-    const todayField = DAY_FIELDS[new Date().getDay()];
+    const today = dayFields[new Date().getDay()];
     if (filters.operatingStatus === "open") {
-      query[todayField] = { $ne: "Closed" };
+      query[today] = { $ne: "Closed" };
     } else if (filters.operatingStatus === "closed") {
-      query[todayField] = "Closed";
+      query[today] = "Closed";
     }
   }
 
