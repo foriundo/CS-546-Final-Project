@@ -1,6 +1,11 @@
 import { centers } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
+const DAY_FIELDS = ["sun_open", "mon_open", "tue_open", "wed_open", "thu_open", "fri_open", "sat_open"];
+
+// escape special regex characters in user-supplied strings
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const getAllCenters = async () => {
   const centerCollection = await centers();
   return await centerCollection.find({}).sort({ location_name: 1 }).toArray();
@@ -19,27 +24,26 @@ const getCentersByFilter = async (filters = {}) => {
   const query = {};
 
   if (filters.borough) {
-    query.borough_name = { $regex: `^${filters.borough}$`, $options: "i" };
+    query.borough_name = { $regex: `^${escapeRegex(filters.borough)}$`, $options: "i" };
   }
 
   if (filters.deviceType) {
     // type_of_device_available is a comma-separated string, so use regex to match any entry
     query.type_of_device_available = {
-      $regex: filters.deviceType,
+      $regex: escapeRegex(filters.deviceType),
       $options: "i",
     };
   }
 
   if (filters.search) {
     query.$or = [
-      { location_name: { $regex: filters.search, $options: "i" } },
-      { operator_name: { $regex: filters.search, $options: "i" } },
+      { location_name: { $regex: escapeRegex(filters.search), $options: "i" } },
+      { operator_name: { $regex: escapeRegex(filters.search), $options: "i" } },
     ];
   }
 
   if (filters.operatingStatus) {
-    const dayFields = ["sun_open", "mon_open", "tue_open", "wed_open", "thu_open", "fri_open", "sat_open"];
-    const todayField = dayFields[new Date().getDay()];
+    const todayField = DAY_FIELDS[new Date().getDay()];
     if (filters.operatingStatus === "open") {
       query[todayField] = { $ne: "Closed" };
     } else if (filters.operatingStatus === "closed") {
