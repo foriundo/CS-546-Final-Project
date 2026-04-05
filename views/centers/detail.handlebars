@@ -1,5 +1,72 @@
 <div class="center-detail">
-  <h1>Center Details</h1>
-  {{!-- TODO: render center details --}}
-  <p>Coming soon.</p>
+  <a href="/centers">&larr; Back to results</a>
+  <h1>{{center.location_name}}</h1>
+
+  {{#if center.openToday}}
+    <span class="badge badge-open">Open Today</span>
+  {{else}}
+    <span class="badge badge-closed">Closed Today</span>
+  {{/if}}
+
+  <div class="card">
+    <h2>Location</h2>
+    <p><strong>Operator:</strong> {{center.operator_name}}</p>
+    <p><strong>Agency:</strong> {{center.oversight_agency}}</p>
+    <p><strong>Borough:</strong> {{center.borough_name}}</p>
+    <p><strong>Address:</strong> {{center.address_street}}</p>
+    <p><strong>Phone:</strong> {{center.full_location_phone_number}}</p>
+    {{#if center.url.url}}
+      <p><strong>Website:</strong> <a href="{{center.url.url}}" target="_blank">{{center.url.url}}</a></p>
+    {{/if}}
+  </div>
+
+  <div class="card">
+    <h2>Hours</h2>
+    <p><strong>Monday:</strong> {{center.mon_open}}</p>
+    <p><strong>Tuesday:</strong> {{center.tue_open}}</p>
+    <p><strong>Wednesday:</strong> {{center.wed_open}}</p>
+    <p><strong>Thursday:</strong> {{center.thu_open}}</p>
+    <p><strong>Friday:</strong> {{center.fri_open}}</p>
+    <p><strong>Saturday:</strong> {{center.sat_open}}</p>
+    <p><strong>Sunday:</strong> {{center.sun_open}}</p>
+  </div>
+
+  <div class="card">
+    <h2>Technology</h2>
+    <p><strong>Devices:</strong> {{center.type_of_device_available}}</p>
+    <p><strong>Workstations:</strong> {{center.workstation_number}}</p>
+    <p><strong>Wired Download:</strong> {{center.wireline_dwn}} Mbps</p>
+    <p><strong>Wired Upload:</strong> {{center.wireline_up}} Mbps</p>
+    <p><strong>Wi-Fi Download:</strong> {{center.wifi_dwn}} Mbps</p>
+    <p><strong>Wi-Fi Upload:</strong> {{center.wifi_up}} Mbps</p>
+    <p><strong>Device Loaning:</strong> {{center.device_loaning}}</p>
+  </div>
+
+  <div class="card">
+    <h2>Programs</h2>
+    <p><strong>Digital Literacy:</strong> {{center.digital_literacy}}</p>
+    <p><strong>Technology Courses:</strong> {{center.technology_related_courses}}</p>
+    <p><strong>Productivity Tools:</strong> {{center.productivity_tools_ex_using}}</p>
+    <p><strong>Job Readiness:</strong> {{center.job_readiness_ex_resume_help}}</p>
+    <p><strong>Education:</strong> {{center.education_ex_personal_growth}}</p>
+    <p><strong>Creative Expression:</strong> {{center.creative_expression_ex_making}}</p>
+    <p><strong>Media & Entertainment:</strong> {{center.media_and_entertainment_ex}}</p>
+    <p><strong>Certifications:</strong> {{center.certifications_ex_in_software}}</p>
+  </div>
+
+  <div class="card">
+    <h2>Accessibility</h2>
+    <p><strong>Wheelchair Accessible:</strong> {{center.wheelchair_accessible}}</p>
+    <p><strong>Notes:</strong> {{center.wheelchair_access_notes}}</p>
+    <p><strong>Assistive Technology:</strong> {{center.assistive_technology}}</p>
+    <p><strong>Languages Offered:</strong> {{center.languages_offered}}</p>
+  </div>
+
+  <div class="card">
+    <h2>Access</h2>
+    <p><strong>Target Population:</strong> {{center.target_population}}</p>
+    <p><strong>Access Requirements:</strong> {{center.access_requirements}}</p>
+    <p><strong>Access Notes:</strong> {{center.access_notes}}</p>
+    <p><strong>Staffed:</strong> {{center.staffed}}</p>
+  </div>
 </div>
