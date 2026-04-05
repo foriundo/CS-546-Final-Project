@@ -1,6 +1,46 @@
 <div class="centers-page">
   <h1>Public Computer Centers</h1>
-  {{!-- TODO: search/filter form --}}
-  {{!-- TODO: render centers list --}}
-  <p>Coming soon.</p>
+
+  <form id="search-form" action="/centers/search" method="GET" class="filter-bar">
+    <input type="text" name="search" placeholder="Search by name..." value="{{filters.search}}" />
+    <select name="borough">
+      <option value="">All Boroughs</option>
+      <option value="Bronx" {{#if (eq filters.borough "Bronx")}}selected{{/if}}>Bronx</option>
+      <option value="Brooklyn" {{#if (eq filters.borough "Brooklyn")}}selected{{/if}}>Brooklyn</option>
+      <option value="Manhattan" {{#if (eq filters.borough "Manhattan")}}selected{{/if}}>Manhattan</option>
+      <option value="Queens" {{#if (eq filters.borough "Queens")}}selected{{/if}}>Queens</option>
+      <option value="Staten Island" {{#if (eq filters.borough "Staten Island")}}selected{{/if}}>Staten Island</option>
+    </select>
+    <select name="deviceType">
+      <option value="">All Devices</option>
+      <option value="Desktops" {{#if (eq filters.deviceType "Desktops")}}selected{{/if}}>Desktops</option>
+      <option value="Laptops" {{#if (eq filters.deviceType "Laptops")}}selected{{/if}}>Laptops</option>
+      <option value="Tablets" {{#if (eq filters.deviceType "Tablets")}}selected{{/if}}>Tablets</option>
+      <option value="Wi-fi Hotspots" {{#if (eq filters.deviceType "Wi-fi Hotspots")}}selected{{/if}}>Wi-Fi Hotspots</option>
+      <option value="Printers" {{#if (eq filters.deviceType "Printers")}}selected{{/if}}>Printers</option>
+    </select>
+    <select name="operatingStatus">
+      <option value="">Any Status</option>
+      <option value="open" {{#if (eq filters.operatingStatus "open")}}selected{{/if}}>Open Today</option>
+      <option value="closed" {{#if (eq filters.operatingStatus "closed")}}selected{{/if}}>Closed Today</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <div id="results">
+    <p id="result-count">{{centers.length}} center(s) found</p>
+    {{#each centers}}
+    <div class="card">
+      <div class="card-title"><a href="/centers/{{_id}}">{{location_name}}</a></div>
+      <p>{{borough_name}} — {{address_street}}</p>
+      {{#if openToday}}
+        <span class="badge badge-open">Open Today</span>
+      {{else}}
+        <span class="badge badge-closed">Closed Today</span>
+      {{/if}}
+    </div>
+    {{else}}
+    <p>No centers found.</p>
+    {{/each}}
+  </div>
 </div>
