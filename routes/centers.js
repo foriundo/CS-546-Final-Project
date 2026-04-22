@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllCenters, getCentersByFilter, getCenterById } from "../data/centers";
+import { getAllCenters, getCentersByFilter, getCenterById } from "../data/centers.js";
 const router = Router();
 
 // GET /centers - list all centers
@@ -19,10 +19,10 @@ router.get("/search", async (req, res) => {
     const filter = {
       name: req.query.name, 
       borough: req.query.borough,
-      organization: req.query.organization
+      organizationName: req.query.organizationName
     };
 
-    const centerList = await getCentersByFilter(filters);
+    const centerList = await getCentersByFilter(filter);
 
     res.render("centers/index", { title: "Search Results", centers: centerList });
   } catch (e) {
