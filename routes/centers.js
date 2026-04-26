@@ -1,6 +1,8 @@
 import { Router } from "express";
-import { requireAuth } from "../middleware/auth.js";
+import { getCenterById } from "../data/centers.js";
+import { addReview, getReviewsByCenter, deleteReview } from "../data/reviews.js";
 import { createReport } from "../data/reports.js";
+import { requireAuth } from "../middleware/auth.js";
 const router = Router();
 
 // GET /centers - list all centers
@@ -26,10 +28,33 @@ router.get("/search", async (req, res) => {
 // GET /centers/:id - center detail page
 router.get("/:id", async (req, res) => {
   try {
-    // TODO: call getCenterById() from data layer
-    res.render("centers/detail", { title: "Center Details" });
+    const center = await getCenterById(req.params.id);
+    const reviews = await getReviewsByCenter(req.params.id);
+    res.render("centers/detail", { title: center.site_name || "Center Details", center, reviews});
   } catch (e) {
-    res.status(404).render("error", { title: "Error", message: e.message });
+    res.status(404).render("error", { title: "Error", message: e.message});
+  }
+});
+
+// POST /centers/:id/review - submit a review
+router.post("/:id/reviews", requireAuth, async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    const { _id, name } = req.session.user;
+    await addReview(req.params.id, _id, name, rating, comment);
+    res.redirect(`/centers/${req.params.id}`);
+  } catch (e) {
+    res.status(400).render("error", { title: "Error", message: e.message });
+  }
+});
+
+// POST /centers/id:/review/:reviewId/delete - delete a review
+router.post("/:id/reviews/:reviewId/delete", requireAuth, async (req, res) => {
+  try {
+    await deleteReview(req.params.reviewId, req.session.user._id);
+    res.redirect(`/centers/${req.params.id}`);
+  } catch (e) {
+    res.status(400).render("error", { title: "Error", message: e.message });
   }
 });
 
