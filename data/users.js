@@ -123,3 +123,5 @@ export const loginUser = async (email, password) => {
     email: user.email
   };
 };
+
+export {checkString, checkEmail, checkId, checkPassword, createUserIndexes, getUserByEmail, getUserById, registerUser, loginUser};

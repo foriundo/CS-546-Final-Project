@@ -13,3 +13,4 @@ const getCollectionFn = (collection) => {
 
 export const centers = getCollectionFn("centers");
 export const users = getCollectionFn("users");
+export const reports = getCollectionFn("reports");
