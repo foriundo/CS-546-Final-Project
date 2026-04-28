@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCenterById } from "../data/centers.js";
+import { getCenterById, getAllCenters } from "../data/centers.js";
 import { addReview, getReviewsByCenter, deleteReview } from "../data/reviews.js";
 import { createReport } from "../data/reports.js";
 import { requireAuth } from "../middleware/auth.js";
@@ -22,6 +22,36 @@ router.get("/search", async (req, res) => {
     res.render("centers/index", { title: "Search Results" });
   } catch (e) {
     res.status(500).render("error", { title: "Error", message: e.message });
+  }
+});
+// GET /trending - trending tab
+router.get("/trending", async (req, res) => {
+  try {
+    const centerList = await getAllCenters();
+
+    const trendingCenters = centerList
+      .filter((center) => center.borough_name && center.location_name)
+      .sort((a, b) => {
+    const getScore = (val) => {
+      if (!val || val === "N/A") return -1; // push to bottom
+      return Number(val);
+    };
+
+    const aScore = getScore(a.workstation_number);
+    const bScore = getScore(b.workstation_number);
+        return bScore - aScore;
+      })
+      .slice(0, 10);
+
+    res.render("centers/trending", {
+      title: "Trending Centers",
+      centers: trendingCenters
+    });
+  } catch (e) {
+    res.status(500).render("error", {
+      title: "Error",
+      message: e.message || e
+    });
   }
 });
 
