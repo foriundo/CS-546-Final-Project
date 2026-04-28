@@ -19,7 +19,9 @@ router.post("/register", requireGuest, async (req, res) => {
     req.session.user = {
       _id: user._id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      role: user.role || "user",
+      isAdmin: user.role === "admin"
     };
 
     return res.redirect("/");
@@ -47,7 +49,9 @@ router.post("/login", requireGuest, async (req, res) => {
     req.session.user = {
       _id: user._id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      role: user.role || "user",
+      isAdmin: user.role === "admin"
     };
 
     return res.redirect("/");

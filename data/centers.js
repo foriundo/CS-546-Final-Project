@@ -4,7 +4,12 @@ import { ObjectId } from "mongodb";
 const getAllCenters = async () => {
   // TODO: implement
   const centerCollection = await centers();
-  return await centerCollection.find({}).toArray();
+  const centerList = await centerCollection.find({}).toArray();
+
+  return centerList.map((center) => {
+    center._id = center._id.toString();
+    return center;
+  });
 };
 
 const getCenterById = async (id) => {

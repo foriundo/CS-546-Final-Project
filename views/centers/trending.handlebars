@@ -1,0 +1,25 @@
+<h1>Trending Centers</h1>
+
+<p>These centers are ranked by number of available computers.</p>
+
+{{#if centers.length}}
+  <ul>
+    {{#each centers}}
+      <li>
+        <a href="/centers/{{this._id}}">{{this.location_name}}</a>
+        <p>Borough: {{this.borough_name}}</p>
+        <p>
+            Computers:
+            {{#unless this.workstation_number}}
+             Unknown
+            {{else}}
+             {{this.workstation_number}}
+            {{/unless}}
+        </p>
+        <p>Operator: {{this.operator_name}}</p>
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No trending centers found.</p>
+{{/if}}

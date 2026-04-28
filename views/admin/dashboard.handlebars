@@ -1,0 +1,50 @@
+<h1>Admin Dashboard</h1>
+
+<section>
+  <h2>Site Stats</h2>
+  <p>Total Users: {{totalUsers}}</p>
+  <p>Total Centers: {{totalCenters}}</p>
+  <p>Admin Users: {{adminUsers}}</p>
+</section>
+
+<section>
+  <h2>Users</h2>
+
+  {{#if users.length}}
+    <table border="1" cellpadding="12" cellspacing="0" style="min-width: 700px;">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th style="min-width: 260px;">Email</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each users}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.role}}</td>
+            <td>
+                {{#unless this.role}}
+                    <form method="POST" action="/admin/users/{{this._id}}/make-admin" style="display:inline;">
+                        <button type="submit">Make Admin</button>
+                    </form>
+                {{/unless}}
+
+                <form method="POST" action="/admin/users/{{this._id}}/delete" style="display:inline; margin-left: 5px;">
+                    <button type="submit" onclick="return confirm('Delete this user?');">
+                      Delete
+                    </button>
+                </form>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>No users found.</p>
+  {{/if}}
+</section>
