@@ -1,0 +1,37 @@
+<div class="userProfile-detail">
+  <h1>{{userInfo.username}}</h1>
+    <h2>Email: {{userInfo.email}}</h2>
+    <h2>Favorites: </h2>
+        <ul>
+            {{#each userInfo.favorites}}
+            <li>
+                <a href="/centers/{{this._id}}">
+                Center: {{this.location_name}}
+                </a>
+                Address: {{this.address_street}}
+            </li>
+            {{/each}}
+        </ul>
+    <h2>Reviews: </h2>
+        <ul>
+            {{#each userInfo.reviews}}
+            <li>
+                Center: center name will go here
+                Rating: {{this.rating}}
+                Comment: {{this.comment}}
+            </li>
+            {{/each}}
+        </ul>
+    <h2>Reports:</h2>
+        <ul>
+            {{#each userInfo.reports}}
+            <li>
+                Center: {{this.centerName}}
+                Issue type: {{this.issueType}}
+                Description: {{this.description}}
+                Current status: {{this.status}}
+            </li>
+            {{/each}}
+        </ul>
+
+</div>

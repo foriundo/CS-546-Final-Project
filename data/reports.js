@@ -50,9 +50,16 @@ const getReportById = async (reportId) => {
     const report = await reportsCollection.findOne({ _id: new ObjectId(reportId) });
     if (!report) throw `No report found with id ${reportId}`;
     return report;
+} 
+
+const getReportsByUser = async (userId) => {
+    userId = checkId(userId, "User ID");
+    const reportsCollection = await reports();
+    const reportsByUser = await reportsCollection.find({ reportedBy: new ObjectId(userId) }).toArray();
+    return reportsByUser;
 }
 
 
 
-export { createReport, getReportById };
+export { createReport, getReportById, getReportsByUser };
  

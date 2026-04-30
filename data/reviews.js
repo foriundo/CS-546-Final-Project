@@ -50,6 +50,8 @@ export const getReviewsByCenter = async (centerId) => {
         .toArray();
 };
 
+// TODO: We should probably add a getReviewsByUser function as well
+
 export const deleteReview = async (reviewId, userId) => {
     reviewId = checkId(reviewId, "Review id");
     userId = checkId(userId, "User id");

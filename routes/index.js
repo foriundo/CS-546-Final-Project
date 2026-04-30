@@ -1,11 +1,13 @@
 import centersRoutes from "./centers.js";
 import authRoutes from "./auth.js";
 import adminRoutes from "./admin.js";
+import profileRoutes from "./profile.js";
 
 const constructorMethod = (app) => {
   app.use("/centers", centersRoutes);
   app.use("/auth", authRoutes);
   app.use("/admin", adminRoutes);
+  app.use("/profile", profileRoutes);
   app.get("/", (req, res) => {
     res.redirect("/centers");
   });
