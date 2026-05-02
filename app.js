@@ -13,7 +13,12 @@ const __dirname = dirname(__filename);
 const app = express();
 
 // Handlebars
-app.engine("handlebars", engine({ defaultLayout: "main" }));
+app.engine("handlebars", engine({ 
+  defaultLayout: "main",
+  helpers: {
+    eq: (a, b) => a === b
+  }
+ }));
 app.set("view engine", "handlebars");
 app.set("views", join(__dirname, "views"));
 
