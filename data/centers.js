@@ -92,8 +92,19 @@ const getCentersByFilter = async (filters = {}) => {
     };
   }
 
+  let results = await centerCollection.find(query).toArray();
 
-  const results = await centerCollection.find(query).toArray();
+  if (filters.operatingStatus && filters.operatingStatus.trim()) {
+    const status = filters.operatingStatus.trim().toLowerCase();
+
+    if (status === "open") {
+      results = results.filter((center) => isOpenNow(center));
+    }
+
+    if (status === "closed") {
+      results = results.filter((center) => !isOpenNow(center));
+    }
+  }
 
   return results.map((center) => {
     center._id = center._id.toString();
