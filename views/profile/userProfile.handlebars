@@ -7,8 +7,8 @@
             <li>
                 <a href="/centers/{{this._id}}">
                 Center: {{this.location_name}}
-                </a>
-                Address: {{this.address_street}}
+                </a><br>
+                Address: {{this.address_street}}<br>
             </li>
             {{/each}}
         </ul>
@@ -16,9 +16,9 @@
         <ul>
             {{#each userInfo.reviews}}
             <li>
-                Center: center name will go here
-                Rating: {{this.rating}}
-                Comment: {{this.comment}}
+                Center: {{this.centerName}}<br>
+                Rating: {{this.rating}}<br>
+                Comment: {{this.comment}}<br>
             </li>
             {{/each}}
         </ul>
@@ -26,10 +26,10 @@
         <ul>
             {{#each userInfo.reports}}
             <li>
-                Center: {{this.centerName}}
-                Issue type: {{this.issueType}}
-                Description: {{this.description}}
-                Current status: {{this.status}}
+                Center: {{this.centerName}}<br>
+                Issue type: {{this.issueType}}<br>
+                Description: {{this.description}}<br>
+                Current status: {{this.status}}<br>
             </li>
             {{/each}}
         </ul>
