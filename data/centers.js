@@ -1,14 +1,43 @@
 import { centers } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
+const isOpenNow = (center) => {
+  const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const today = days[new Date().getDay()];
+
+  const hours = center[`${today}_open`];
+
+  if (!hours || hours === "Closed") return false;
+
+  const parts = hours.split("-");
+  if (parts.length !== 2) return false;
+
+  const parseTime = (timeStr) => {
+    let [time, modifier] = timeStr.trim().split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    return hours * 60 + minutes;
+  };
+
+  const openTime = parseTime(parts[0]);
+  const closeTime = parseTime(parts[1]);
+
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  return currentMinutes >= openTime && currentMinutes <= closeTime;
+};
+
 const getAllCenters = async () => {
   const centerCollection = await centers();
   const centerList = await centerCollection.find({}).toArray();
 
-  console.log(centerList[0]);
-
   return centerList.map((center) => {
     center._id = center._id.toString();
+    center.isOpen = isOpenNow(center);
     return center;
   });
 };
@@ -23,7 +52,10 @@ const getCenterById = async (id) => {
   const centerCollection = await centers();
   const center = await centerCollection.findOne({ _id: new ObjectId(id) });
   if (!center) throw new Error(`No center found with id ${id}.`);
+
   center._id = center._id.toString();
+  center.isOpen = isOpenNow(center);
+
   return center;
 };
 
@@ -53,15 +85,19 @@ const getCentersByFilter = async (filters = {}) => {
     };
   }
 
-  console.log("filters:", filters);
-  console.log("query:", query);
+  if (filters.deviceType && filters.deviceType.trim()) {
+    query.type_of_device_available = {
+      $regex: filters.deviceType.trim(),
+      $options: "i"
+    };
+  }
+
 
   const results = await centerCollection.find(query).toArray();
 
-  console.log("results found:", results.length);
-
   return results.map((center) => {
     center._id = center._id.toString();
+    center.isOpen = isOpenNow(center);
     return center;
   });
 };
