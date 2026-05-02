@@ -287,3 +287,23 @@ h2 {
   color: #1a1a2e;
   font-weight: bold;
 }
+
+.active-filters {
+  margin-bottom: 1rem;
+}
+
+.filter-tag {
+  display: inline-block;
+  background: #eee;
+  padding: 4px 8px;
+  margin-right: 6px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.filter-tag a {
+  margin-left: 5px;
+  text-decoration: none;
+  color: red;
+  font-weight: bold;
+}
