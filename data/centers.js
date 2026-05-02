@@ -21,6 +21,7 @@ const getCenterById = async (id) => {
   const centerCollection = await centers();
   const center = await centerCollection.findOne({ _id: new ObjectId(id) });
   if (!center) throw new Error(`No center found with id ${id}.`);
+  center._id = center._id.toString();
   return center;
 };
 
@@ -37,7 +38,10 @@ const getCentersByFilter = async (filters = {}) => {
   }
 
   if (filters.borough && filters.borough.trim()) {
-    query.borough = filters.borough.trim();
+    query.borough = {
+      $regex: filters.borough.trim(),
+      $options: "i"
+    };
   }
 
   if (filters.organizationName && filters.organizationName.trim()) {
@@ -47,7 +51,12 @@ const getCentersByFilter = async (filters = {}) => {
     };
   }
 
-  return await centerCollection.find(filters).toArray();
+  const results = await centerCollection.find(query).toArray();
+
+  return results.map((center) => {
+    center._id = center._id.toString();
+    return center;
+  });
 };
 
 export { getAllCenters, getCenterById, getCentersByFilter };
