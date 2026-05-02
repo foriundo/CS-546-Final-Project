@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
   try {
     const centerList = await getAllCenters();
 
-    res.render("centers/index", { title: "Public Computer Centers", centers: centerList });
+    res.render("centers/index", { title: "Public Computer Centers", centers: centerList, filters: {} });
   } catch (e) {
     res.status(500).render("error", { title: "Error", message: e.message });
   }
@@ -21,16 +21,16 @@ router.get("/", async (req, res) => {
 router.get("/search", async (req, res) => {
   try {
     const filter = {
-      name: req.query.name,
-      borough: req.query.borough,
-      organizationName: req.query.organizationName,
-      deviceType: req.query.deviceType,
-      operatingStatus: req.query.operatingStatus
+      name: req.query.name || '',
+      borough: req.query.borough || '',
+      organizationName: req.query.organizationName || '',
+      deviceType: req.query.deviceType || '',
+      operatingStatus: req.query.operatingStatus || ''
     };
 
     const centerList = await getCentersByFilter(filter);
 
-    res.render("centers/index", { title: "Search Results", centers: centerList });
+    res.render("centers/index", { title: "Search Results", centers: centerList, filters: filter });
   } catch (e) {
     res.status(500).render("error", { title: "Error", message: e.message });
   }

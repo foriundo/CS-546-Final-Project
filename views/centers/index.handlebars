@@ -43,6 +43,45 @@
     <a href="/centers">Clear</a>
   </form>
 
+    {{#if filters}}
+      <div class="active-filters">
+        {{#if filters.name}}
+          <span class="filter-tag">
+            Name: {{filters.name}}
+            <a href="/centers/search?borough={{filters.borough}}&organizationName={{filters.organizationName}}&deviceType={{filters.deviceType}}&operatingStatus={{filters.operatingStatus}}">x</a>
+          </span>
+        {{/if}}
+
+        {{#if filters.borough}}
+          <span class="filter-tag">
+            Borough: {{filters.borough}}
+            <a href="/centers/search?name={{filters.name}}&organizationName={{filters.organizationName}}&deviceType={{filters.deviceType}}&operatingStatus={{filters.operatingStatus}}">x</a>
+          </span>
+        {{/if}}
+
+        {{#if filters.organizationName}}
+          <span class="filter-tag">
+            Organization: {{filters.organizationName}}
+            <a href="/centers/search?name={{filters.name}}&borough={{filters.borough}}&deviceType={{filters.deviceType}}&operatingStatus={{filters.operatingStatus}}">x</a>
+          </span>
+        {{/if}}
+
+        {{#if filters.deviceType}}
+          <span class="filter-tag">
+            Device: {{filters.deviceType}}
+            <a href="/centers/search?name={{filters.name}}&borough={{filters.borough}}&organizationName={{filters.organizationName}}&operatingStatus={{filters.operatingStatus}}">x</a>
+          </span>
+        {{/if}}
+
+        {{#if filters.operatingStatus}}
+          <span class="filter-tag">
+            Status: {{filters.operatingStatus}}
+            <a href="/centers/search?name={{filters.name}}&borough={{filters.borough}}&organizationName={{filters.organizationName}}&deviceType={{filters.deviceType}}">x</a>
+          </span>
+        {{/if}}
+      </div>
+    {{/if}}
+
   {{#if centers.length}}
     <div class="centers-list">
       {{#each centers}}
