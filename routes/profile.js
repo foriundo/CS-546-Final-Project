@@ -22,8 +22,10 @@ router.get("/", requireAuth, async (req, res) => {
         "reviews": [],
         "favorites": await Promise.all(favorites.map(id => getCenterById(id))),
     }
-    res.render("profile", { title: "User Profile", userInfo });
+    res.render("profile/userProfile", { title: "User Profile", userInfo });
   } catch (e) {
     res.status(500).render("error", { title: "Error", message: e.message });
   }
 });
+
+export default router;
