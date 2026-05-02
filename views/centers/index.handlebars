@@ -1,6 +1,80 @@
 <div class="centers-page">
   <h1>Public Computer Centers</h1>
-  {{!-- TODO: search/filter form --}}
-  {{!-- TODO: render centers list --}}
-  <p>Coming soon.</p>
+
+  <form action="/centers/search" method="GET" class="center-search-form">
+    <div>
+      <label for="name">Search by name</label>
+      <input type="text" id="name" name="name" placeholder="Enter center name">
+    </div>
+
+    <div>
+      <label for="borough">Borough</label>
+      <select id="borough" name="borough">
+        <option value="">All Boroughs</option>
+        <option value="Bronx">Bronx</option>
+        <option value="Brooklyn">Brooklyn</option>
+        <option value="Manhattan">Manhattan</option>
+        <option value="Queens">Queens</option>
+        <option value="Staten Island">Staten Island</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="organizationName">Organization</label>
+      <input type="text" id="organizationName" name="organizationName" placeholder="Enter organization name">
+    </div>
+
+    <div>
+      <label for="deviceType">Device Type</label>
+      <input type="text" id="deviceType" name="deviceType" placeholder="Desktops, printers, cameras">
+    </div>
+
+    <div>
+      <label for="operatingStatus">Status</label>
+      <select id="operatingStatus" name="operatingStatus">
+        <option value="">All</option>
+        <option value="open">Open</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+
+
+    <button type="submit">Search</button>
+    <a href="/centers">Clear</a>
+  </form>
+
+  {{#if centers.length}}
+    <div class="centers-list">
+      {{#each centers}}
+        <div class="center-card">
+          <h2>{{location_name}}</h2>
+
+          <p><strong>Borough:</strong> {{borough_name}}</p>
+          <p><strong>Address:</strong> {{full_location_address}}</p>
+          <p><strong>Organization:</strong> {{operator_name}}</p>
+          <p> <strong>Device(s) offered:</strong>
+          {{#if type_of_device_available}}
+            {{type_of_device_available}}
+          {{else}}
+            Unavailable
+          {{/if}}
+        </p>
+
+          <p> <strong>Status:</strong> {{#if isOpen}} Open {{else}} Closed {{/if}} </p> 
+
+          <p><strong>Monday:</strong> {{#if mon_open}}{{mon_open}}{{else}}Unavailable{{/if}}</p>
+          <p><strong>Tuesday:</strong> {{#if tue_open}}{{tue_open}}{{else}}Unavailable{{/if}}</p>
+          <p><strong>Wednesday:</strong> {{#if wed_open}}{{wed_open}}{{else}}Unavailable{{/if}}</p>
+          <p><strong>Thursday:</strong> {{#if thu_open}}{{thu_open}}{{else}}Unavailable{{/if}}</p>
+          <p><strong>Friday:</strong> {{#if fri_open}}{{fri_open}}{{else}}Unavailable{{/if}}</p>
+          <p><strong>Saturday:</strong> {{#if sat_open}}{{sat_open}}{{else}}Unavailable{{/if}}</p>
+          <p><strong>Sunday:</strong> {{#if sun_open}}{{sun_open}}{{else}}Unavailable{{/if}}</p>
+
+          <a href="/centers/{{_id}}">View Details</a>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <p>No centers found.</p>
+  {{/if}}
 </div>

@@ -1,15 +1,17 @@
 import { Router } from "express";
-import { getCenterById, getAllCenters } from "../data/centers.js";
+import { getCenterById, getAllCenters, getCentersByFilter } from "../data/centers.js";
 import { addReview, getReviewsByCenter, deleteReview } from "../data/reviews.js";
 import { createReport } from "../data/reports.js";
 import { requireAuth } from "../middleware/auth.js";
+
 const router = Router();
 
 // GET /centers - list all centers
 router.get("/", async (req, res) => {
   try {
-    // TODO: call getAllCenters() from data layer
-    res.render("centers/index", { title: "Public Computer Centers" });
+    const centerList = await getAllCenters();
+
+    res.render("centers/index", { title: "Public Computer Centers", centers: centerList });
   } catch (e) {
     res.status(500).render("error", { title: "Error", message: e.message });
   }
@@ -18,8 +20,17 @@ router.get("/", async (req, res) => {
 // GET /centers/search - search/filter centers
 router.get("/search", async (req, res) => {
   try {
-    // TODO: call getCentersByFilter() from data layer
-    res.render("centers/index", { title: "Search Results" });
+    const filter = {
+      name: req.query.name,
+      borough: req.query.borough,
+      organizationName: req.query.organizationName,
+      deviceType: req.query.deviceType,
+      operatingStatus: req.query.operatingStatus
+    };
+
+    const centerList = await getCentersByFilter(filter);
+
+    res.render("centers/index", { title: "Search Results", centers: centerList });
   } catch (e) {
     res.status(500).render("error", { title: "Error", message: e.message });
   }
@@ -30,7 +41,7 @@ router.get("/trending", async (req, res) => {
     const centerList = await getAllCenters();
 
     const trendingCenters = centerList
-      .filter((center) => center.borough_name && center.location_name)
+      .filter((center) => center.borough && center.location_name)
       .sort((a, b) => {
     const getScore = (val) => {
       if (!val || val === "N/A") return -1; // push to bottom
@@ -59,8 +70,10 @@ router.get("/trending", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const center = await getCenterById(req.params.id);
+
     const reviews = await getReviewsByCenter(req.params.id);
-    res.render("centers/detail", { title: center.site_name || "Center Details", center, reviews});
+    res.render("centers/detail", { title: center.location_name || "Center Details", center, reviews});
+
   } catch (e) {
     res.status(404).render("error", { title: "Error", message: e.message});
   }
@@ -89,7 +102,7 @@ router.post("/:id/reviews/:reviewId/delete", requireAuth, async (req, res) => {
 });
 
 // POST /centers/:id/report
-router.post("/centers/:id/report", requireAuth, async (req, res) => {
+router.post("/:id/report", requireAuth, async (req, res) => {
   try {
     const centerId = req.params.id;
     const userId = req.session.user._id;
@@ -104,6 +117,6 @@ router.post("/centers/:id/report", requireAuth, async (req, res) => {
       res.status(500).json({error: e.message});
     }
   }
-})
+});
 
 export default router;
