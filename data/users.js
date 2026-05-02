@@ -83,6 +83,7 @@ export const registerUser = async (name, email, password) => {
     name,
     email,
     hashedPassword,
+    role: "user",
     favorites: [],
     createdAt: new Date()
   };
@@ -120,6 +121,9 @@ export const loginUser = async (email, password) => {
   return {
     _id: user._id.toString(),
     name: user.name,
-    email: user.email
+    email: user.email,
+    role: user.role || "user"
   };
 };
+
+export {checkString, checkEmail, checkId, checkPassword};

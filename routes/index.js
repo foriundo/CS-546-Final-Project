@@ -1,14 +1,13 @@
 import centersRoutes from "./centers.js";
-import authRoutes from "./auth.js";       // uncomment when ready
-// import reviewsRoutes from "./reviews.js"; // uncomment when ready
-// import favoritesRoutes from "./favorites.js"; // uncomment when ready
+import authRoutes from "./auth.js";
+import adminRoutes from "./admin.js";
+import profileRoutes from "./profile.js";
 
 const constructorMethod = (app) => {
   app.use("/centers", centersRoutes);
   app.use("/auth", authRoutes);
-  // app.use("/reviews", reviewsRoutes);
-  // app.use("/favorites", favoritesRoutes);
-
+  app.use("/admin", adminRoutes);
+  app.use("/profile", profileRoutes);
   app.get("/", (req, res) => {
     res.redirect("/centers");
   });

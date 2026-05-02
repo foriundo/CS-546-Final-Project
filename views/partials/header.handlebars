@@ -1,11 +1,19 @@
 <header>
   <nav>
     <a href="/" class="nav-logo">NYC Computer Access</a>
+
     <ul class="nav-links">
       <li><a href="/centers">Find a Center</a></li>
+      <li><a href="/centers/trending">Trending</a></li>
 
       {{#if user}}
         <li><a href="/favorites">Favorites</a></li>
+        <li><a href="/profile">Profile</a></li>
+
+        {{#if user.isAdmin}}
+          <li><a href="/admin">Admin</a></li>
+        {{/if}}
+
         <li><a href="/auth/logout" class="logout-button">Logout</a></li>
       {{else}}
         <li><a href="/auth/login">Login</a></li>
