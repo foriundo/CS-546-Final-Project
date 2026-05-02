@@ -21,9 +21,11 @@ router.get("/", async (req, res) => {
 router.get("/search", async (req, res) => {
   try {
     const filter = {
-      name: req.query.name, 
+      name: req.query.name,
       borough: req.query.borough,
-      organizationName: req.query.organizationName
+      organizationName: req.query.organizationName,
+      deviceType: req.query.deviceType,
+      operatingStatus: req.query.operatingStatus
     };
 
     const centerList = await getCentersByFilter(filter);

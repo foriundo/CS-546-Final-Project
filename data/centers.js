@@ -5,6 +5,8 @@ const getAllCenters = async () => {
   const centerCollection = await centers();
   const centerList = await centerCollection.find({}).toArray();
 
+  console.log(centerList[0]);
+
   return centerList.map((center) => {
     center._id = center._id.toString();
     return center;
@@ -38,7 +40,7 @@ const getCentersByFilter = async (filters = {}) => {
   }
 
   if (filters.borough && filters.borough.trim()) {
-    query.borough = {
+    query.borough_name = {
       $regex: filters.borough.trim(),
       $options: "i"
     };
@@ -51,7 +53,12 @@ const getCentersByFilter = async (filters = {}) => {
     };
   }
 
+  console.log("filters:", filters);
+  console.log("query:", query);
+
   const results = await centerCollection.find(query).toArray();
+
+  console.log("results found:", results.length);
 
   return results.map((center) => {
     center._id = center._id.toString();
