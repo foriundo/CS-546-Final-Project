@@ -1,12 +1,22 @@
 <div class="center-detail">
-  <h1>{{center.site_name}}</h1>
+  <h1>{{center.location_name}}</h1>
 
   <div class="center-info">
-    <p><strong>Address: </strong> {{center.address}}, {{center.borough_name}}</p>
+    <p><strong>Address: </strong> {{center.address_street}}, {{center.borough_name}}</p>
     <p><strong>Operator:</strong> {{center.operator_name}}</p>
-        <p><strong>Devices Available:</strong> {{center.type_of_device_available}}</p>
-        <p><strong>Hours:</strong> {{center.hours_of_operation}}</p>
-      </div>
+    <p><strong>Devices Available:</strong> {{center.type_of_device_available}}</p>
+    <p> <strong>Status:</strong> {{#if center.isOpen}} Open {{else}} Closed {{/if}} </p> 
+    <p><strong>Hours:</strong></p>
+    <div id="hours-div">
+      <p><strong>Monday:</strong> {{#if center.mon_open}}{{center.mon_open}}{{else}}Unavailable{{/if}}</p>
+      <p><strong>Tuesday:</strong> {{#if center.tue_open}}{{center.tue_open}}{{else}}Unavailable{{/if}}</p>
+      <p><strong>Wednesday:</strong> {{#if center.wed_open}}{{center.wed_open}}{{else}}Unavailable{{/if}}</p>
+      <p><strong>Thursday:</strong> {{#if center.thu_open}}{{center.thu_open}}{{else}}Unavailable{{/if}}</p>
+      <p><strong>Friday:</strong> {{#if center.fri_open}}{{center.fri_open}}{{else}}Unavailable{{/if}}</p>
+      <p><strong>Saturday:</strong> {{#if center.sat_open}}{{center.sat_open}}{{else}}Unavailable{{/if}}</p>
+      <p><strong>Sunday:</strong> {{#if center.sun_open}}{{center.sun_open}}{{else}}Unavailable{{/if}}</p>
+    </div>
+  </div>
 
   <div class="reviews-section">
     <h2>Reviews</h2>
@@ -36,6 +46,30 @@
       </form>
     {{else}}
       <p><a href="/auth/login">Log in</a> to leave a review.</p>
+    {{/if}}
+  </div>
+
+  <div class="reports-section">
+    <h2>Reports</h2>
+
+        {{#if user}}
+      <h3>Report an Issue</h3>
+      <form id="report-form">
+        <input type="hidden" id="center-id" value="{{center._id}}">
+        <label>Issue Type:</label>
+        <select id="issue-types">
+          <option value="incorrect hours">Incorrect Hours</option>
+          <option value="incorrect address">Incorrect Address</option>
+          <option value="other">Other Issue</option>
+        </select>
+        <label>Issue:<textarea id="issue" name="issue" required></textarea></label>
+        <button type="submit">Submit</button>
+      </form>
+      <div id="report-success-failure">
+
+      </div>
+    {{else}}
+      <p><a href="/auth/login">Log in</a> to report an issue.</p>
     {{/if}}
   </div>
 </div>

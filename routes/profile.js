@@ -11,15 +11,29 @@ const router = Router();
 router.get("/", requireAuth, async (req, res) => {
   try {
     const user = req.session.user;
+    console.log("favorites:", user.favorites);
+    console.log("reports:", await getReportsByUser(user._id));
     const favorites = user.favorites || [];
     let reviews = await getReviewsByUser(user._id);
+    
     reviews = await Promise.all(reviews.map(async (review) => {
-      const center = await getCenterById(review.centerId.toString());
-      return {...review, centerName: center.location_name}}));
+      try {
+        const center = await getCenterById(review.centerId.toString());
+        return {...review, centerName: center.location_name};
+      } catch (e) {
+        return {...review, centerName: "Unknown Center"};
+      }
+    }));
+    
     let reports = await getReportsByUser(user._id);
     reports = await Promise.all(reports.map(async (report) => {
+      try {
         const center = await getCenterById(report.centerId.toString());
-        return {...report, centerName: center.location_name}}));
+        return {...report, centerName: center.location_name};
+      } catch (e) {
+          return {...report, centerName: "Unknown Center"};
+      }
+    }));
 
     let userInfo = {
         "username": user.name,
