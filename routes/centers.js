@@ -109,6 +109,7 @@ router.post("/:id/report", requireAuth, async (req, res) => {
     const issueType = req.body.issueType;
     const description = req.body.description;
     const report = await createReport(centerId, userId, issueType, description);
+
     return res.status(201).json({report});
   } catch (e) {
     if (typeof e === 'string') {

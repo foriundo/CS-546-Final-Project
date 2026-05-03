@@ -307,3 +307,9 @@ h2 {
   color: red;
   font-weight: bold;
 }
+
+#hours-div {
+  padding-left: 15px;
+  background-color: #e9e8e8;
+  border-radius: 10px;
+}
