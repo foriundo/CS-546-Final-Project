@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportForm = document.getElementById('report-form');
 
     if (reportForm) {
-        reportForm.addEventListener('submit', async(SubmitEvent) => {
-            SubmitEvent.preventDefault();
+        reportForm.addEventListener('submit', async(event) => {
+            event.preventDefault();
 
-            const centerId = document.getElementById('center-id').value;
+            const centerId = reportForm.action.split("/").pop();
             const issueType = document.getElementById('issue-types').value;
             const description = document.getElementById('issue').value;
             const successOrFailure = document.getElementById('report-success-failure');

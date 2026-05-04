@@ -28,11 +28,11 @@
             <td>{{this.email}}</td>
             <td>{{this.role}}</td>
             <td>
-                {{#unless this.role}}
-                    <form method="POST" action="/admin/users/{{this._id}}/make-admin" style="display:inline;">
-                        <button type="submit">Make Admin</button>
-                    </form>
-                {{/unless}}
+                {{#if this.canMakeAdmin}}
+                  <form method="POST" action="/admin/users/{{this._id}}/make-admin" style="display:inline;">
+                   <button type="submit">Make Admin</button>
+                </form>
+              {{/if}}
 
                 <form method="POST" action="/admin/users/{{this._id}}/delete" style="display:inline; margin-left: 5px;">
                     <button type="submit" onclick="return confirm('Delete this user?');">
@@ -46,5 +46,55 @@
     </table>
   {{else}}
     <p>No users found.</p>
+  {{/if}}
+</section>
+
+<section>
+  <h2>Reported Issues</h2>
+
+  {{#if reports.length}}
+    <table border="1" cellpadding="12" cellspacing="0" style="min-width: 1000px;">
+      <thead>
+        <tr>
+          <th>Center ID</th>
+          <th>Reported By</th>
+          <th>Issue Type</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each reports}}
+          <tr>
+            <td><a href="/centers/{{this.centerId}}">View Center</a></td>
+            <td>{{this.reportedByName}}<br>
+            <small>{{this.reportedByEmail}}</small></td>
+            <td>{{this.issueType}}</td>
+            <td style="max-width: 180px; word-wrap: break-word;">
+              {{this.description}}</td>
+            <td>{{this.status}}</td>
+            <td>{{this.createdAt}}</td>
+            <td>
+              {{#if (eq this.status "pending")}}
+              <form method="POST" action="/admin/reports/{{this._id}}/reviewed" style="display:inline;">
+              <button type="submit">Mark Reviewed</button>
+              </form>
+            {{/if}}
+
+              <form method="POST" action="/admin/reports/{{this._id}}/delete" style="display:inline; margin-left: 5px;">
+                <button type="submit" onclick="return confirm('Delete this report?');">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>No reported issues.</p>
   {{/if}}
 </section>

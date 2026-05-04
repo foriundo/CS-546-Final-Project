@@ -1,21 +1,16 @@
 <h1>Trending Centers</h1>
 
-<p>These centers are ranked by number of available computers.</p>
+<p>These centers are ranked by number of reviews and average rating.</p>
 
 {{#if centers.length}}
   <ul>
     {{#each centers}}
       <li>
         <a href="/centers/{{this._id}}">{{this.location_name}}</a>
+
         <p>Borough: {{this.borough_name}}</p>
-        <p>
-            Computers:
-            {{#unless this.workstation_number}}
-             Unknown
-            {{else}}
-             {{this.workstation_number}}
-            {{/unless}}
-        </p>
+        <p>Reviews: {{this.reviewCount}}</p>
+        <p>Average Rating: {{this.averageRating}}/5</p>
         <p>Operator: {{this.operator_name}}</p>
       </li>
     {{/each}}

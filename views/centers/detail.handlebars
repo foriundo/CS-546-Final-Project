@@ -50,26 +50,28 @@
   </div>
 
   <div class="reports-section">
-    <h2>Reports</h2>
+  <h2>Reports</h2>
 
-        {{#if user}}
-      <h3>Report an Issue</h3>
-      <form id="report-form">
-        <input type="hidden" id="center-id" value="{{center._id}}">
-        <label>Issue Type:</label>
-        <select id="issue-types">
-          <option value="incorrect hours">Incorrect Hours</option>
-          <option value="incorrect address">Incorrect Address</option>
-          <option value="other">Other Issue</option>
-        </select>
-        <label>Issue:<textarea id="issue" name="issue" required></textarea></label>
-        <button type="submit">Submit</button>
-      </form>
-      <div id="report-success-failure">
+  {{#if user}}
+    <h3>Report an Issue</h3>
 
-      </div>
-    {{else}}
-      <p><a href="/auth/login">Log in</a> to report an issue.</p>
-    {{/if}}
+    <form id="report-form" method="POST" action="/reports/center/{{center._id}}">
+      <label for="issue-types">Issue Type:</label>
+      <select id="issue-types" name="issueType" required>
+        <option value="incorrect hours">Incorrect Hours</option>
+        <option value="incorrect address">Incorrect Address</option>
+        <option value="other">Other Issue</option>
+      </select>
+
+      <label for="issue">Issue:</label>
+      <textarea id="issue" name="description" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="report-success-failure"></div>
+  {{else}}
+    <p><a href="/auth/login">Log in</a> to report an issue.</p>
+  {{/if}}
   </div>
 </div>

@@ -3,6 +3,7 @@ import { getCenterById, getAllCenters, getCentersByFilter } from "../data/center
 import { addReview, getReviewsByCenter, deleteReview } from "../data/reviews.js";
 import { createReport } from "../data/reports.js";
 import { requireAuth } from "../middleware/auth.js";
+import { reviews } from "../config/mongoCollections.js";
 
 const router = Router();
 
@@ -39,20 +40,44 @@ router.get("/search", async (req, res) => {
 router.get("/trending", async (req, res) => {
   try {
     const centerList = await getAllCenters();
+    const reviewCollection = await reviews();
 
-    const trendingCenters = centerList
-      .filter((center) => center.borough && center.location_name)
-      .sort((a, b) => {
-    const getScore = (val) => {
-      if (!val || val === "N/A") return -1; // push to bottom
-      return Number(val);
-    };
+    const reviewStats = await reviewCollection
+      .aggregate([
+        {
+          $group: {
+            _id: "$centerId",
+            reviewCount: { $sum: 1 },
+            averageRating: { $avg: "$rating" }
+          }
+        },
+        {
+          $sort: {
+            reviewCount: -1,
+            averageRating: -1
+          }
+        },
+        {
+          $limit: 10
+        }
+      ])
+      .toArray();
 
-    const aScore = getScore(a.workstation_number);
-    const bScore = getScore(b.workstation_number);
-        return bScore - aScore;
+    const trendingCenters = reviewStats
+      .map((stat) => {
+        const center = centerList.find(
+          (center) => center._id.toString() === stat._id.toString()
+        );
+
+        if (!center) return null;
+
+        return {
+          ...center,
+          reviewCount: stat.reviewCount,
+          averageRating: stat.averageRating.toFixed(1)
+        };
       })
-      .slice(0, 10);
+      .filter((center) => center !== null);
 
     res.render("centers/trending", {
       title: "Trending Centers",

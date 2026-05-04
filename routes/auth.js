@@ -11,10 +11,24 @@ router.get("/register", requireGuest, async (req, res) => {
 });
 
 router.post("/register", requireGuest, async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role, adminCode } = req.body;
 
   try {
-    const user = await registerUser(name, email, password);
+    let accountRole = "user";
+
+    if (role === "admin") {
+      if (adminCode !== "CS546ADMIN") {
+        return res.status(400).render("auth/register", {
+          title: "Register",
+          error: "Invalid admin code.",
+          formData: { name, email }
+        });
+      }
+
+      accountRole = "admin";
+    }
+
+    const user = await registerUser(name, email, password, accountRole);
 
     req.session.user = {
       _id: user._id,
