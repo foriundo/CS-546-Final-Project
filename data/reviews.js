@@ -44,10 +44,17 @@ export const getReviewsByCenter = async (centerId) => {
     centerId = checkId(centerId, "Center id");
 
     const reviewCollection = await reviews();
-    return await reviewCollection
+    const reviewList = await reviewCollection
         .find({ centerId: new ObjectId(centerId) })
         .sort({ createdAt: -1 })
         .toArray();
+
+    return reviewList.map((r) => ({
+        ...r,
+        _id: r._id.toString(),
+        userId: r.userId.toString(),
+        centerId: r.centerId.toString()
+    }));
 };
 
 
