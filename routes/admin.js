@@ -2,6 +2,7 @@ import { Router } from "express";
 import { ObjectId } from "mongodb";
 import { requireAdmin } from "../middleware/auth.js";
 import { users, centers } from "../config/mongoCollections.js";
+import { getAllReports, markReportReviewed, deleteReport} from "../data/reports.js";
 
 
 const router = Router();
@@ -17,15 +18,27 @@ router.get("/", requireAdmin, async (req, res) => {
 
       allUsers.forEach((user) => {
         user._id = user._id.toString();
+        user.canMakeAdmin = user.role !== "admin";
     });
 
     const totalUsers = await userCollection.countDocuments({});
     const totalCenters = await centerCollection.countDocuments({});
     const adminUsers = await userCollection.countDocuments({ role: "admin" });
+    const allReports = await getAllReports();
+
+    for (let report of allReports) {
+      const reportingUser = await userCollection.findOne({
+        _id: new ObjectId(report.reportedBy)
+      });
+
+      report.reportedByName = reportingUser ? reportingUser.name : "Unknown user";
+      report.reportedByEmail = reportingUser ? reportingUser.email : "";
+    }
 
     res.render("admin/dashboard", {
       title: "Admin Dashboard",
       users: allUsers,
+      reports: allReports,
       totalUsers,
       totalCenters,
       adminUsers
@@ -106,6 +119,30 @@ router.post("/users/:id/make-admin", requireAdmin, async (req, res) => {
     res.redirect("/admin");
   } catch (e) {
     res.status(500).render("error", {
+      title: "Error",
+      message: e.message || e
+    });
+  }
+});
+
+router.post("/reports/:id/reviewed", requireAdmin, async (req, res) => {
+  try {
+    await markReportReviewed(req.params.id, req.session.user._id);
+    res.redirect("/admin");
+  } catch (e) {
+    res.status(400).render("error", {
+      title: "Error",
+      message: e.message || e
+    });
+  }
+});
+
+router.post("/reports/:id/delete", requireAdmin, async (req, res) => {
+  try {
+    await deleteReport(req.params.id);
+    res.redirect("/admin");
+  } catch (e) {
+    res.status(400).render("error", {
       title: "Error",
       message: e.message || e
     });

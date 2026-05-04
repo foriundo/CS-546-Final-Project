@@ -66,7 +66,7 @@ export const getUserById = async (id) => {
   };
 };
 
-export const registerUser = async (name, email, password) => {
+export const registerUser = async (name, email, password, role = "user") => {
   name = checkString(name, "Name");
   email = checkEmail(email);
   password = checkPassword(password);
@@ -84,7 +84,7 @@ export const registerUser = async (name, email, password) => {
     name,
     email,
     hashedPassword,
-    role: "user",
+    role: role,
     favorites: [],
     createdAt: new Date()
   };

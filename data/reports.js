@@ -59,7 +59,69 @@ const getReportsByUser = async (userId) => {
     return reportsByUser;
 }
 
+const getAllReports = async () => {
+  const reportsCollection = await reports();
+
+  const allReports = await reportsCollection
+    .find({})
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  return allReports.map((report) => {
+    report._id = report._id.toString();
+    report.centerId = report.centerId.toString();
+    report.reportedBy = report.reportedBy.toString();
+
+    if (report.reviewedBy) {
+      report.reviewedBy = report.reviewedBy.toString();
+    }
+
+    return report;
+  });
+};
+
+const markReportReviewed = async (reportId, adminId) => {
+  reportId = checkId(reportId, "Report ID");
+  adminId = checkId(adminId, "Admin ID");
+
+  const reportsCollection = await reports();
+
+  const updateInfo = await reportsCollection.updateOne(
+    { _id: new ObjectId(reportId) },
+    {
+      $set: {
+        status: "reviewed",
+        reviewedBy: new ObjectId(adminId),
+        reviewedAt: new Date(),
+        updatedAt: new Date()
+      }
+    }
+  );
+
+  if (updateInfo.matchedCount === 0) {
+    throw `No report found with id ${reportId}`;
+  }
+
+  return true;
+};
+
+const deleteReport = async (reportId) => {
+  reportId = checkId(reportId, "Report ID");
+
+  const reportsCollection = await reports();
+
+  const deleteInfo = await reportsCollection.deleteOne({
+    _id: new ObjectId(reportId)
+  });
+
+  if (deleteInfo.deletedCount === 0) {
+    throw `No report found with id ${reportId}`;
+  }
+
+  return true;
+};
 
 
-export { createReport, getReportById, getReportsByUser };
+
+export { createReport, getReportById, getReportsByUser, getAllReports,markReportReviewed, deleteReport };
  
