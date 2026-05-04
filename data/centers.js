@@ -59,7 +59,7 @@ const getCenterById = async (id) => {
   return center;
 };
 
-// TODO: implement filtering by borough, deviceType, operatingStatus
+
 const getCentersByFilter = async (filters = {}) => {
   const centerCollection = await centers();
   let query = {};

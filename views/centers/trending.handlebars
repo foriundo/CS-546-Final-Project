@@ -3,18 +3,15 @@
 <p>These centers are ranked by number of reviews and average rating.</p>
 
 {{#if centers.length}}
-  <ul>
     {{#each centers}}
-      <li>
+      <div class="trending-center-div">
         <a href="/centers/{{this._id}}">{{this.location_name}}</a>
-
         <p>Borough: {{this.borough_name}}</p>
         <p>Reviews: {{this.reviewCount}}</p>
         <p>Average Rating: {{this.averageRating}}/5</p>
         <p>Operator: {{this.operator_name}}</p>
-      </li>
+      </div>
     {{/each}}
-  </ul>
 {{else}}
   <p>No trending centers found.</p>
 {{/if}}

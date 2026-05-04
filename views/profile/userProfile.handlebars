@@ -1,37 +1,36 @@
 <div class="userProfile-detail">
   <h1>{{userInfo.username}}</h1>
     <h2>Email: {{userInfo.email}}</h2>
-    <h2>Favorites: </h2>
-        <ul>
-            {{#each userInfo.favorites}}
-            <li>
-                <a href="/centers/{{this._id}}">
-                Center: {{this.location_name}}
-                </a><br>
-                Address: {{this.address_street}}<br>
-            </li>
-            {{/each}}
-        </ul>
-    <h2>Reviews: </h2>
-        <ul>
-            {{#each userInfo.reviews}}
-            <li>
-                Center: {{this.centerName}}<br>
-                Rating: {{this.rating}}<br>
-                Comment: {{this.comment}}<br>
-            </li>
-            {{/each}}
-        </ul>
-    <h2>Reports:</h2>
-        <ul>
-            {{#each userInfo.reports}}
-            <li>
-                Center: {{this.centerName}}<br>
-                Issue type: {{this.issueType}}<br>
-                Description: {{this.description}}<br>
-                Current status: {{this.status}}<br>
-            </li>
-            {{/each}}
-        </ul>
-
+    <div id="favs-div">
+        <h2>Favorites: </h2>
+            <p>
+                {{#each userInfo.favorites}}
+                    <a href="/centers/{{this._id}}">
+                    <strong>Center:</strong> {{this.location_name}}
+                    </a><br>
+                    <strong>Address:</strong> {{this.address_street}}<br>
+                {{/each}}
+            </p>
+    </div>
+    <div id="reviews-div">
+        <h2>Reviews: </h2>
+            <p>
+                {{#each userInfo.reviews}}
+                    <strong>Center:</strong> {{this.centerName}}<br>
+                    <strong>Rating:</strong> {{this.rating}}<br>
+                    <strong>Comment:</strong> {{this.comment}}<br>
+                {{/each}}
+            </p>
+    </div>
+    <div id="reports-div">
+        <h2>Reports:</h2>
+            <p>
+                {{#each userInfo.reports}}
+                    <strong>Center:</strong> {{this.centerName}}<br>
+                    <strong>Issue type:</strong> {{this.issueType}}<br>
+                    <strong>Description:</strong> {{this.description}}<br>
+                    <strong>Current status:</strong> {{this.status}}<br>
+                {{/each}}
+            </p>
+    </div>
 </div>
