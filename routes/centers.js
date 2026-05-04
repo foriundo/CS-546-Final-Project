@@ -4,6 +4,7 @@ import { addReview, getReviewsByCenter, deleteReview } from "../data/reviews.js"
 import { createReport } from "../data/reports.js";
 import { requireAuth } from "../middleware/auth.js";
 import { reviews } from "../config/mongoCollections.js";
+import { addRemoveFavorites } from "../data/users.js";
 
 const router = Router();
 
@@ -95,10 +96,10 @@ router.get("/trending", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const center = await getCenterById(req.params.id);
-
-    const reviews = await getReviewsByCenter(req.params.id);
-    res.render("centers/detail", { title: center.location_name || "Center Details", center, reviews});
-
+    const centerReviews = await getReviewsByCenter(req.params.id);
+    const favorites = (req.session.user && req.session.user.favorites || []).map(id => id.toString());
+    const isFavorited = favorites.includes(center._id);
+    res.render("centers/detail", { title: center.location_name || "Center Details", center, centerReviews, isFavorited});
   } catch (e) {
     res.status(404).render("error", { title: "Error", message: e.message});
   }
@@ -126,7 +127,7 @@ router.post("/:id/reviews/:reviewId/delete", requireAuth, async (req, res) => {
   }
 });
 
-// POST /centers/:id/report
+// POST /centers/:id/report - report an issue
 router.post("/:id/report", requireAuth, async (req, res) => {
   try {
     const centerId = req.params.id;
@@ -136,6 +137,24 @@ router.post("/:id/report", requireAuth, async (req, res) => {
     const report = await createReport(centerId, userId, issueType, description);
 
     return res.status(201).json({report});
+  } catch (e) {
+    if (typeof e === 'string') {
+      res.status(400).json({error: e});
+    } else {
+      res.status(500).json({error: e.message});
+    }
+  }
+});
+
+// POST /centers/:id/favorite - add/remove a favorite to/from user profile
+router.post("/:id/favorite", requireAuth, async (req, res) => {
+  try {
+    const centerId = req.params.id;
+    const userId = req.session.user._id;
+    let favorite = await addRemoveFavorites(userId, centerId);
+    req.session.user.favorites = favorite;
+    
+    return res.status(200).json({ favorites: req.session.user.favorites });
   } catch (e) {
     if (typeof e === 'string') {
       res.status(400).json({error: e});

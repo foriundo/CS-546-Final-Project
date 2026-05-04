@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
+import { getCenterById } from "./centers.js";
 
 const saltRounds = 12;
 
@@ -122,8 +123,31 @@ export const loginUser = async (email, password) => {
     _id: user._id.toString(),
     name: user.name,
     email: user.email,
-    role: user.role || "user"
+    role: user.role || "user",
+    favorites: user.favorites || []
   };
+};
+
+export const addRemoveFavorites = async (userId, centerId) => {
+  userId = checkId(userId, "User Id");
+  centerId = checkId(centerId, "Center Id");
+  const user = await getUserById(userId);
+  const userCollection = await users();
+  const favorites = user.favorites.map(id => id.toString());
+
+  if (favorites.includes(centerId)) {
+    await userCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $pull: { favorites: new ObjectId(centerId)}}
+    );
+  } else {
+    await userCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $push: { favorites: new ObjectId(centerId)}}
+    );
+  }
+  const updatedUser = await getUserById(userId);
+  return updatedUser.favorites;
 };
 
 export {checkString, checkEmail, checkId, checkPassword};

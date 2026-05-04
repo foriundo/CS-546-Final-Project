@@ -11,8 +11,6 @@ const router = Router();
 router.get("/", requireAuth, async (req, res) => {
   try {
     const user = req.session.user;
-    console.log("favorites:", user.favorites);
-    console.log("reports:", await getReportsByUser(user._id));
     const favorites = user.favorites || [];
     let reviews = await getReviewsByUser(user._id);
     

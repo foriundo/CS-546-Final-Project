@@ -1,6 +1,6 @@
 <div class="center-detail">
   <h1>{{center.location_name}}</h1>
-
+  
   <div class="center-info">
     <p><strong>Address: </strong> {{center.address_street}}, {{center.borough_name}}</p>
     <p><strong>Operator:</strong> {{center.operator_name}}</p>
@@ -18,11 +18,19 @@
     </div>
   </div>
 
+  <div class="favorites-section">
+    {{#if user}}
+      <button id="fav-btn" data-center-id="{{center._id}}">{{#if isFavorited}}Remove from Favorites{{else}}Add to favorites{{/if}}</button>
+    {{else}}
+      <p><a href="/auth/login">Log in</a> to add this center to your favorites!</p>
+    {{/if}}
+  </div>
+
   <div class="reviews-section">
     <h2>Reviews</h2>
 
-    {{#if reviews.length}}
-      {{#each reviews}}
+    {{#if centerReviews.length}}
+      {{#each centerReviews}}
         <div class="review-card">
           <p><strong>{{this.userName}}</strong> — {{this.rating}}/5</p>
           <p>{{this.comment}}</p>
@@ -50,28 +58,30 @@
   </div>
 
   <div class="reports-section">
-  <h2>Reports</h2>
+    <h2>Reports</h2>
 
-  {{#if user}}
-    <h3>Report an Issue</h3>
+    {{#if user}}
+      <h3>Report an Issue</h3>
 
-    <form id="report-form" method="POST" action="/reports/center/{{center._id}}">
-      <label for="issue-types">Issue Type:</label>
-      <select id="issue-types" name="issueType" required>
-        <option value="incorrect hours">Incorrect Hours</option>
-        <option value="incorrect address">Incorrect Address</option>
-        <option value="other">Other Issue</option>
-      </select>
+      <form id="report-form">
+        <input type="hidden" id="center-id" value="{{center._id}}">
+        <label for="issue-types">Issue Type:</label>
+        <select id="issue-types" name="issueType" required>
+          <option value="incorrect hours">Incorrect Hours</option>
+          <option value="incorrect address">Incorrect Address</option>
+          <option value="other">Other Issue</option>
+        </select>
 
-      <label for="issue">Issue:</label>
-      <textarea id="issue" name="description" required></textarea>
+        <label for="issue">Issue:</label>
+        <textarea id="issue" name="description" required></textarea>
 
-      <button type="submit">Submit</button>
-    </form>
+        <button type="submit">Submit</button>
+      </form>
 
-    <div id="report-success-failure"></div>
-  {{else}}
-    <p><a href="/auth/login">Log in</a> to report an issue.</p>
-  {{/if}}
+      <div id="report-success-failure"></div>
+    {{else}}
+      <p><a href="/auth/login">Log in</a> to report an issue.</p>
+    {{/if}}
+
   </div>
 </div>
