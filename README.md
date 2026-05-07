@@ -94,6 +94,25 @@ package.json    Dependencies and npm scripts
 
 ---
 
+## Test Accounts
+
+### Admin
+Email: admin@test.com
+Password: Password123
+
+### User
+Email: user@test.com
+Password: Password123
+
+### To Register
+
+To register as an admin, toggle to admin and use code: CS546ADMIN
+To register as a user, toggle to user.
+
+Afterwards input wanted credentials.
+
+---
+
 ## Dataset
 Data comes from the [NYC Open Data Citywide Public Computer Centers](https://data.cityofnewyork.us/Social-Services/Citywide-Public-Computer-Centers/sejx-2gn3/about_data) dataset.
 
