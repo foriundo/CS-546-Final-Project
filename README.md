@@ -97,16 +97,19 @@ package.json    Dependencies and npm scripts
 ## Test Accounts
 
 ### Admin
-Email: admin@test.com
+Email: admin@test.com  
 Password: Password123
 
 ### User
-Email: user@test.com
+Email: user@test.com  
 Password: Password123
 
-### To Register
+### Registration
 
-To register as an admin, toggle to admin and use code: CS546ADMIN
+To register as an admin, toggle to admin and use code:  
+
+CS546ADMIN
+
 To register as a user, toggle to user.
 
 Afterwards input wanted credentials.
