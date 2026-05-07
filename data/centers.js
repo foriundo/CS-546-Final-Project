@@ -31,6 +31,10 @@ const isOpenNow = (center) => {
   return currentMinutes >= openTime && currentMinutes <= closeTime;
 };
 
+const escapeRegex = (str) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
 const getAllCenters = async () => {
   const centerCollection = await centers();
   const centerList = await centerCollection.find({}).toArray();
@@ -66,28 +70,28 @@ const getCentersByFilter = async (filters = {}) => {
 
   if (filters.name && filters.name.trim()) {
     query.location_name = {
-      $regex: filters.name.trim(),
+      $regex: escapeRegex(filters.name.trim()),
       $options: "i"
     };
   }
 
   if (filters.borough && filters.borough.trim()) {
     query.borough_name = {
-      $regex: filters.borough.trim(),
+      $regex: escapeRegex(filters.borough.trim()),
       $options: "i"
     };
   }
 
   if (filters.organizationName && filters.organizationName.trim()) {
     query.operator_name = {
-      $regex: filters.organizationName.trim(),
+      $regex: escapeRegex(filters.organizationName.trim()),
       $options: "i"
     };
   }
 
   if (filters.deviceType && filters.deviceType.trim()) {
     query.type_of_device_available = {
-      $regex: filters.deviceType.trim(),
+      $regex: escapeRegex(filters.deviceType.trim()),
       $options: "i"
     };
   }
