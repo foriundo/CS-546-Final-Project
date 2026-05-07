@@ -36,6 +36,7 @@ router.get("/", requireAuth, async (req, res) => {
     let userInfo = {
         "username": user.name,
         "email": user.email,
+        "role": user.role || "user",
         "reports": reports,
         "reviews": reviews,
         "favorites": await Promise.all(favorites.map(id => getCenterById(id))),

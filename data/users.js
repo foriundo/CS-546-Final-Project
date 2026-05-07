@@ -62,6 +62,7 @@ export const getUserById = async (id) => {
     _id: user._id.toString(),
     name: user.name,
     email: user.email,
+    role: user.role || "user",
     favorites: user.favorites || []
   };
 };
@@ -98,7 +99,8 @@ export const registerUser = async (name, email, password, role = "user") => {
   return {
     _id: insertInfo.insertedId.toString(),
     name: newUser.name,
-    email: newUser.email
+    email: newUser.email,
+    role: newUser.role
   };
 };
 
