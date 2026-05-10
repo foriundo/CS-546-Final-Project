@@ -17,6 +17,12 @@ const seed = async () => {
     await db.dropCollection("users").catch(() => {});
     console.log("Dropped existing users collection.");
 
+    await db.dropCollection("reviews").catch(() => {});
+    console.log("Dropped existing reviews collection.");
+
+    await db.dropCollection("reports").catch(() => {});
+    console.log("Dropped existing reports collection.");
+
     // Fetch from NYC Open Data
     const response = await fetch(NYC_OPEN_DATA_URL);
     if (!response.ok) throw new Error("Failed to fetch NYC Open Data.");
