@@ -171,7 +171,7 @@ router.get("/:id", async (req, res) => {
     const isFavorited = favorites.includes(center._id);
     res.render("centers/detail", { title: center.location_name || "Center Details", center, centerReviews, isFavorited});
   } catch (e) {
-    res.status(404).render("error", { title: "Error", message: e.message});
+    res.status(404).render("error", { title: "Error", message: e.message || e });
   }
 });
 
@@ -186,7 +186,17 @@ router.post("/:id/reviews", requireAuth, async (req, res) => {
     await addReview(req.params.id, _id, name, rating, comment);
     res.redirect(`/centers/${req.params.id}`);
   } catch (e) {
-    res.status(400).render("error", { title: "Error", message: e.message });
+    const center = await getCenterById(req.params.id);
+    const centerReviews = await getReviewsByCenter(req.params.id);
+    const favorites = (req.session.user && req.session.user.favorites || []).map(id => id.toString());
+    const isFavorited = favorites.includes(center._id);
+    res.status(400).render("centers/detail", {
+      title: center.location_name || "Center Details",
+      center,
+      centerReviews,
+      isFavorited,
+      reviewError: e.message || e
+    })
   }
 });
 
@@ -199,7 +209,7 @@ router.post("/:id/reviews/:reviewId/delete", requireAuth, async (req, res) => {
     await deleteReview(req.params.reviewId, req.session.user._id);
     res.redirect(`/centers/${req.params.id}`);
   } catch (e) {
-    res.status(400).render("error", { title: "Error", message: e.message });
+    res.status(400).render("error", { title: "Error", message: e.message || e });
   }
 });
 

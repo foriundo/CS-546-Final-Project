@@ -25,6 +25,12 @@ export const addReview = async (centerId, userId, userName, rating, comment) => 
 
     const reviewCollection = await reviews();
 
+    const existingReview = await reviewCollection.findOne({
+        centerId: new ObjectId(centerId),
+        userId: new ObjectId(userId)
+    });
+    if (existingReview) throw "You have already reviewed this center. Please delete your existing review before submitting a new one.";
+
     const newReview = {
         centerId: new ObjectId(centerId),
         userId: new ObjectId(userId),
