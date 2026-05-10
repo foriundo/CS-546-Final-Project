@@ -5,6 +5,7 @@ import { createReport } from "../data/reports.js";
 import { requireAuth, requireAdmin } from "../middleware/auth.js";
 import { reviews } from "../config/mongoCollections.js";
 import { addRemoveFavorites } from "../data/users.js";
+import { ObjectId } from "mongodb";
 
 const router = Router();
 
@@ -129,6 +130,9 @@ router.get("/:id/edit", requireAdmin, async (req, res) => {
 
 router.post("/:id/edit", requireAdmin, async (req, res) => {
   try {
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).render ("error", {title: "Error", message: "Invalid center id"})
+    }
     const updatedCenter = await updateCenter(req.params.id, req.body);
     res.redirect(`/centers/${updatedCenter._id}`);
   } catch (e) {
@@ -145,6 +149,9 @@ router.post("/:id/edit", requireAdmin, async (req, res) => {
 
 router.post("/:id/delete", requireAdmin, async (req, res) => {
   try {
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).render("error", {title: "Error", message: "Invalid center id"});
+    }
     await deleteCenter(req.params.id);
     res.redirect("/centers");
   } catch (e) {
@@ -171,6 +178,9 @@ router.get("/:id", async (req, res) => {
 // POST /centers/:id/review - submit a review
 router.post("/:id/reviews", requireAuth, async (req, res) => {
   try {
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).render("error", {title: "Error", message: "Invalid center id"});
+    }
     const { rating, comment } = req.body;
     const { _id, name } = req.session.user;
     await addReview(req.params.id, _id, name, rating, comment);
@@ -183,6 +193,9 @@ router.post("/:id/reviews", requireAuth, async (req, res) => {
 // POST /centers/id:/review/:reviewId/delete - delete a review
 router.post("/:id/reviews/:reviewId/delete", requireAuth, async (req, res) => {
   try {
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).render("error", {title: "Error", message: "Invalid center id"});
+    }
     await deleteReview(req.params.reviewId, req.session.user._id);
     res.redirect(`/centers/${req.params.id}`);
   } catch (e) {
@@ -193,6 +206,9 @@ router.post("/:id/reviews/:reviewId/delete", requireAuth, async (req, res) => {
 // POST /centers/:id/report - report an issue
 router.post("/:id/report", requireAuth, async (req, res) => {
   try {
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: "Invalid center id" });
+    }
     const centerId = req.params.id;
     const userId = req.session.user._id;
     const issueType = req.body.issueType;
@@ -212,6 +228,9 @@ router.post("/:id/report", requireAuth, async (req, res) => {
 // POST /centers/:id/favorite - add/remove a favorite to/from user profile
 router.post("/:id/favorite", requireAuth, async (req, res) => {
   try {
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: "Invalid center id" });
+    }
     const centerId = req.params.id;
     const userId = req.session.user._id;
     let favorite = await addRemoveFavorites(userId, centerId);
