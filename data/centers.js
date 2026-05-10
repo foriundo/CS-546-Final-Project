@@ -1,5 +1,6 @@
 import { centers } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
+import { checkId } from "./users.js";
 
 const isOpenNow = (center) => {
   const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
@@ -117,4 +118,121 @@ const getCentersByFilter = async (filters = {}) => {
   });
 };
 
-export { getAllCenters, getCenterById, getCentersByFilter };
+const checkCenterFields = (centerData) => {
+  let {
+    location_name,
+    borough_name,
+    address_street,
+    operator_name,
+    type_of_device_available,
+    workstation_number,
+    mon_open,
+    tue_open,
+    wed_open,
+    thu_open,
+    fri_open,
+    sat_open,
+    sun_open
+  } = centerData;
+
+  if (!location_name || typeof location_name !== "string" || !location_name.trim()) {
+    throw new Error("Location name is required.");
+  }
+
+  if (!borough_name || typeof borough_name !== "string" || !borough_name.trim()) {
+    throw new Error("Borough is required.");
+  }
+
+  if (!address_street || typeof address_street !== "string" || !address_street.trim()) {
+    throw new Error("Address is required.");
+  }
+
+  if (!operator_name || typeof operator_name !== "string" || !operator_name.trim()) {
+    throw new Error("Operator name is required.");
+  }
+
+  return {
+    location_name: location_name.trim(),
+    borough_name: borough_name.trim(),
+    address_street: address_street.trim(),
+    operator_name: operator_name.trim(),
+    type_of_device_available: type_of_device_available?.trim() || "N/A",
+    workstation_number: workstation_number?.trim() || "N/A",
+    mon_open: mon_open?.trim() || "Unavailable",
+    tue_open: tue_open?.trim() || "Unavailable",
+    wed_open: wed_open?.trim() || "Unavailable",
+    thu_open: thu_open?.trim() || "Unavailable",
+    fri_open: fri_open?.trim() || "Unavailable",
+    sat_open: sat_open?.trim() || "Unavailable",
+    sun_open: sun_open?.trim() || "Unavailable"
+  };
+};
+
+const createCenter = async (centerData) => {
+  const cleanData = checkCenterFields(centerData);
+
+  const centerCollection = await centers();
+
+  const newCenter = {
+    ...cleanData,
+    createdAt: new Date(),
+    updatedAt: null
+  };
+
+  const insertInfo = await centerCollection.insertOne(newCenter);
+
+  if (!insertInfo.acknowledged || !insertInfo.insertedId) {
+    throw new Error("Could not add center.");
+  }
+
+  return await getCenterById(insertInfo.insertedId.toString());
+};
+
+const updateCenter = async (centerId, centerData) => {
+  centerId = checkId(centerId, "Center ID");
+
+  const cleanData = checkCenterFields(centerData);
+
+  const centerCollection = await centers();
+
+  const updateInfo = await centerCollection.updateOne(
+    { _id: new ObjectId(centerId) },
+    {
+      $set: {
+        ...cleanData,
+        updatedAt: new Date()
+      }
+    }
+  );
+
+  if (updateInfo.matchedCount === 0) {
+    throw new Error(`No center found with id ${centerId}`);
+  }
+
+  return await getCenterById(centerId);
+};
+
+const deleteCenter = async (centerId) => {
+  centerId = checkId(centerId, "Center ID");
+
+  const centerCollection = await centers();
+
+  const deleteInfo = await centerCollection.deleteOne({
+    _id: new ObjectId(centerId)
+  });
+
+  if (deleteInfo.deletedCount === 0) {
+    throw new Error(`No center found with id ${centerId}`);
+  }
+
+  return true;
+};
+
+export {
+  getAllCenters,
+  getCenterById,
+  getCentersByFilter,
+  createCenter,
+  updateCenter,
+  deleteCenter
+};

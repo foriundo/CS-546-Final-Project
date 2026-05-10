@@ -1,5 +1,17 @@
 <div class="center-detail">
   <h1>{{center.location_name}}</h1>
+
+  {{#if user.isAdmin}}
+  <div class="admin-center-actions">
+    <a href="/centers/{{center._id}}/edit">Edit Center</a>
+
+    <form method="POST" action="/centers/{{center._id}}/delete" style="display:inline; margin-left: 10px;">
+      <button type="submit" onclick="return confirm('Delete this center? This cannot be undone.');">
+        Delete Center
+      </button>
+    </form>
+  </div>
+{{/if}}
   
   <div class="center-info">
     <p><strong>Address: </strong> {{center.address_street}}, {{center.borough_name}}</p>

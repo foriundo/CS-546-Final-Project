@@ -1,5 +1,9 @@
 <h1>Admin Dashboard</h1>
 
+<p>
+  <a href="/centers/add">Add New Center</a>
+</p>
+
 <section>
   <h2>Site Stats</h2>
   <p>Total Users: {{totalUsers}}</p>
@@ -81,6 +85,10 @@
               {{#if (eq this.status "pending")}}
               <form method="POST" action="/admin/reports/{{this._id}}/reviewed" style="display:inline;">
               <button type="submit">Mark Reviewed</button>
+              </form>
+
+              <form method="POST" action="/admin/reports/{{this._id}}/escalate" style="display:inline; margin-left: 5px;">
+              <button type="submit">Escalate</button>
               </form>
             {{/if}}
 
