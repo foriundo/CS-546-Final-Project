@@ -114,35 +114,76 @@ router.post("/add", requireAdmin, async (req, res) => {
 
 router.get("/:id/edit", requireAdmin, async (req, res) => {
   try {
+
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).render("error", { title: "Error", message: "Invalid center id" });
+    }
+
     const center = await getCenterById(req.params.id);
 
-    res.render("centers/edit", {
-      title: "Edit Center",
-      center
-    });
+    res.render("centers/edit", { title: "Edit Center", center });
   } catch (e) {
-    res.status(404).render("error", {
-      title: "Error",
-      message: e.message || e
-    });
+    res.status(404).render("error", { title: "Error", message: e.message || e });
   }
 });
 
 router.post("/:id/edit", requireAdmin, async (req, res) => {
   try {
     if (!ObjectId.isValid(req.params.id)) {
-      return res.status(400).render ("error", {title: "Error", message: "Invalid center id"})
+      return res.status(400).render("error", { title: "Error", message: "Invalid center id" });
     }
+
+    const validTimeRange = /^((0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM) - (0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)|Closed|Unavailable)$/i;
+
+    const hourFields = [ "mon_open", "tue_open", "wed_open", "thu_open", "fri_open", "sat_open", "sun_open"];
+
+    for (let field of hourFields) {
+
+      if (req.body[field]) {
+
+        req.body[field] = req.body[field].trim();
+
+        if (req.body[field].toLowerCase() === "closed") {
+          req.body[field] = "Closed";
+        }
+
+        if (req.body[field].toLowerCase() === "unavailable") {
+          req.body[field] = "Unavailable";
+        }
+
+        if (!validTimeRange.test(req.body[field])) {
+
+          return res.status(400).render("centers/edit", {
+            title: "Edit Center",
+            error: "Hours must be in format 8:00 AM - 4:00 PM, Closed, or Unavailable",
+            center: {
+              _id: req.params.id,
+              ...req.body
+            }
+          });
+
+        }
+      }
+    }
+
     const updatedCenter = await updateCenter(req.params.id, req.body);
     res.redirect(`/centers/${updatedCenter._id}`);
   } catch (e) {
+    let center;
+
+    try {
+      center = await getCenterById(req.params.id);
+    } catch {
+      center = {
+        _id: req.params.id,
+        ...req.body
+      };
+    }
+
     res.status(400).render("centers/edit", {
       title: "Edit Center",
       error: e.message || e,
-      center: {
-        _id: req.params.id,
-        ...req.body
-      }
+      center
     });
   }
 });

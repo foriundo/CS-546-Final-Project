@@ -12,7 +12,7 @@
   <input type="text" id="borough_name" name="borough_name" value="{{center.borough_name}}" required>
 
   <label for="address_street">Address</label>
-  <input type="text" id="address_street" name="address_street" value="{{center.address_street}}" required>
+  <input type="text" id="address_street" name="address_street" value="{{#if center.address_street}}{{center.address_street}}{{else}}{{center.full_location_address}}{{/if}}" required>
 
   <label for="operator_name">Operator</label>
   <input type="text" id="operator_name" name="operator_name" value="{{center.operator_name}}" required>
@@ -26,25 +26,81 @@
   <h2>Hours</h2>
 
   <label for="mon_open">Monday</label>
-  <input type="text" id="mon_open" name="mon_open" value="{{center.mon_open}}">
+  <input 
+    type="text" 
+    id="mon_open" 
+    name="mon_open" 
+    value="{{center.mon_open}}"
+    placeholder="8:00 AM - 4:00 PM, Closed, or Unavailable"
+    pattern="^((0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm]) - (0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm])|[Cc][Ll][Oo][Ss][Ee][Dd]|[Uu][Nn][Aa][Vv][Aa][Ii][Ll][Aa][Bb][Ll][Ee])$"
+    title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
+  >
 
   <label for="tue_open">Tuesday</label>
-  <input type="text" id="tue_open" name="tue_open" value="{{center.tue_open}}">
+  <input 
+    type="text" 
+    id="tue_open" 
+    name="tue_open" 
+    value="{{center.tue_open}}"
+    placeholder="8:00 AM - 4:00 PM, Closed, or Unavailable"
+    pattern="^((0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm]) - (0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm])|[Cc][Ll][Oo][Ss][Ee][Dd]|[Uu][Nn][Aa][Vv][Aa][Ii][Ll][Aa][Bb][Ll][Ee])$"
+    title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
+  >
 
   <label for="wed_open">Wednesday</label>
-  <input type="text" id="wed_open" name="wed_open" value="{{center.wed_open}}">
+  <input 
+    type="text" 
+    id="wed_open" 
+    name="wed_open" 
+    value="{{center.wed_open}}"
+    placeholder="8:00 AM - 4:00 PM, Closed, or Unavailable"
+    pattern="^((0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm]) - (0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm])|[Cc][Ll][Oo][Ss][Ee][Dd]|[Uu][Nn][Aa][Vv][Aa][Ii][Ll][Aa][Bb][Ll][Ee])$"
+    title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
+  >
 
   <label for="thu_open">Thursday</label>
-  <input type="text" id="thu_open" name="thu_open" value="{{center.thu_open}}">
+  <input 
+    type="text" 
+    id="thu_open" 
+    name="thu_open" 
+    value="{{center.thu_open}}"
+    placeholder="8:00 AM - 4:00 PM, Closed, or Unavailable"
+    pattern="^((0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm]) - (0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm])|[Cc][Ll][Oo][Ss][Ee][Dd]|[Uu][Nn][Aa][Vv][Aa][Ii][Ll][Aa][Bb][Ll][Ee])$"
+    title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
+  >
 
   <label for="fri_open">Friday</label>
-  <input type="text" id="fri_open" name="fri_open" value="{{center.fri_open}}">
+  <input 
+    type="text" 
+    id="fri_open" 
+    name="fri_open" 
+    value="{{center.fri_open}}"
+    placeholder="8:00 AM - 4:00 PM, Closed, or Unavailable"
+    pattern="^((0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm]) - (0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm])|[Cc][Ll][Oo][Ss][Ee][Dd]|[Uu][Nn][Aa][Vv][Aa][Ii][Ll][Aa][Bb][Ll][Ee])$"
+    title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
+  >
 
   <label for="sat_open">Saturday</label>
-  <input type="text" id="sat_open" name="sat_open" value="{{center.sat_open}}">
+  <input 
+    type="text" 
+    id="sat_open" 
+    name="sat_open" 
+    value="{{center.sat_open}}"
+    placeholder="8:00 AM - 4:00 PM, Closed, or Unavailable"
+    pattern="^((0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm]) - (0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm])|[Cc][Ll][Oo][Ss][Ee][Dd]|[Uu][Nn][Aa][Vv][Aa][Ii][Ll][Aa][Bb][Ll][Ee])$"
+    title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
+  >
 
   <label for="sun_open">Sunday</label>
-  <input type="text" id="sun_open" name="sun_open" value="{{center.sun_open}}">
+  <input 
+    type="text" 
+    id="sun_open" 
+    name="sun_open" 
+    value="{{center.sun_open}}"
+    placeholder="8:00 AM - 4:00 PM, Closed, or Unavailable"
+    pattern="^((0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm]) - (0?[1-9]|1[0-2]):[0-5][0-9] ([AaPp][Mm])|[Cc][Ll][Oo][Ss][Ee][Dd]|[Uu][Nn][Aa][Vv][Aa][Ii][Ll][Aa][Bb][Ll][Ee])$"
+    title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
+  >
 
   <button type="submit">Save Changes</button>
 </form>
