@@ -14,7 +14,7 @@
 {{/if}}
   
   <div class="center-info">
-    <p><strong>Address: </strong> {{center.address_street}}, {{center.borough_name}}</p>
+    <p><strong>Address: </strong> {{center.address_street}}</p>
     <p><strong>Operator:</strong> {{center.operator_name}}</p>
     <p><strong>Devices Available:</strong> {{center.type_of_device_available}}</p>
     <p> <strong>Status:</strong> {{#if center.isOpen}} Open {{else}} Closed {{/if}} </p> 
@@ -29,6 +29,39 @@
       <p><strong>Sunday:</strong> {{#if center.sun_open}}{{center.sun_open}}{{else}}N/A{{/if}}</p>
     </div>
   </div>
+
+  <div class="contact-section">
+      <h2>Contact</h2>
+      {{#if center.full_location_phone_number}}
+        <p><strong>Phone:</strong> {{center.full_location_phone_number}}</p>
+      {{/if}}
+      {{#if center.url.url}}
+        <p><strong>Website:</strong> <a href="{{center.url.url}}" target="_blank">{{center.url.url}}</a></p>
+    {{/if}}
+  </div>
+
+<div class="accessibility-section">
+    <h2>Accessibility</h2>
+    <p><strong>Wheelchair Accessible:</strong> {{#if (eq center.wheelchair_accessible "Y")}}Yes{{else}}No{{/if}}</p>
+    <p><strong>Assistive Technology:</strong> {{#if (eq center.assistive_technology "Y")}}Yes{{else}}No{{/if}}</p>
+    {{#if center.wheelchair_access_notes}}
+        <p><strong>Notes:</strong> {{center.wheelchair_access_notes}}</p>
+    {{/if}}
+</div>
+
+<div class="courses-section">
+    <h2>Course Offerings</h2>
+    <ul>
+        {{#if (eq center.technology_related_courses "Y")}}<li>Technology Courses</li>{{/if}}
+        {{#if (eq center.productivity_tools_ex_using "Y")}}<li>Productivity Tools</li>{{/if}}
+        {{#if (eq center.job_readiness_ex_resume_help "Y")}}<li>Job Help</li>{{/if}}
+        {{#if (eq center.education_ex_personal_growth "Y")}}<li>Education/Personal Growth</li>{{/if}}
+        {{#if (eq center.creative_expression_ex_making "Y")}}<li>Creative Expression</li>{{/if}}
+        {{#if (eq center.media_and_entertainment_ex "Y")}}<li>Media & Entertainment</li>{{/if}}
+        {{#if (eq center.certifications_ex_in_software "Y")}}<li>Certifications</li>{{/if}}
+        {{#if (eq center.digital_literacy "Y")}}<li>Digital Literacy</li>{{/if}}
+    </ul>
+</div>
 
   <div class="favorites-section">
     {{#if user}}
