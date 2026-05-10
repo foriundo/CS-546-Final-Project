@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getCenterById, getAllCenters, getCentersByFilter } from "../data/centers.js";
+import { getCenterById, getAllCenters, getCentersByFilter, createCenter, updateCenter, deleteCenter } from "../data/centers.js";
 import { addReview, getReviewsByCenter, deleteReview } from "../data/reviews.js";
 import { createReport } from "../data/reports.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireAuth, requireAdmin } from "../middleware/auth.js";
 import { reviews } from "../config/mongoCollections.js";
 import { addRemoveFavorites } from "../data/users.js";
 
@@ -59,7 +59,7 @@ router.get("/trending", async (req, res) => {
           }
         },
         {
-          $limit: 10
+          $limit: 5
         }
       ])
       .toArray();
@@ -86,6 +86,69 @@ router.get("/trending", async (req, res) => {
     });
   } catch (e) {
     res.status(500).render("error", {
+      title: "Error",
+      message: e.message || e
+    });
+  }
+});
+
+router.get("/add", requireAdmin, async (req, res) => {
+  res.render("centers/add", {
+    title: "Add Center"
+  });
+});
+
+router.post("/add", requireAdmin, async (req, res) => {
+  try {
+    const newCenter = await createCenter(req.body);
+    res.redirect(`/centers/${newCenter._id}`);
+  } catch (e) {
+    res.status(400).render("centers/add", {
+      title: "Add Center",
+      error: e.message || e,
+      formData: req.body
+    });
+  }
+});
+
+router.get("/:id/edit", requireAdmin, async (req, res) => {
+  try {
+    const center = await getCenterById(req.params.id);
+
+    res.render("centers/edit", {
+      title: "Edit Center",
+      center
+    });
+  } catch (e) {
+    res.status(404).render("error", {
+      title: "Error",
+      message: e.message || e
+    });
+  }
+});
+
+router.post("/:id/edit", requireAdmin, async (req, res) => {
+  try {
+    const updatedCenter = await updateCenter(req.params.id, req.body);
+    res.redirect(`/centers/${updatedCenter._id}`);
+  } catch (e) {
+    res.status(400).render("centers/edit", {
+      title: "Edit Center",
+      error: e.message || e,
+      center: {
+        _id: req.params.id,
+        ...req.body
+      }
+    });
+  }
+});
+
+router.post("/:id/delete", requireAdmin, async (req, res) => {
+  try {
+    await deleteCenter(req.params.id);
+    res.redirect("/centers");
+  } catch (e) {
+    res.status(400).render("error", {
       title: "Error",
       message: e.message || e
     });

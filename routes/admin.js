@@ -2,7 +2,7 @@ import { Router } from "express";
 import { ObjectId } from "mongodb";
 import { requireAdmin } from "../middleware/auth.js";
 import { users, centers } from "../config/mongoCollections.js";
-import { getAllReports, markReportReviewed, deleteReport} from "../data/reports.js";
+import { getAllReports, markReportReviewed, deleteReport, escalateReport} from "../data/reports.js";
 
 
 const router = Router();
@@ -140,6 +140,18 @@ router.post("/reports/:id/reviewed", requireAdmin, async (req, res) => {
 router.post("/reports/:id/delete", requireAdmin, async (req, res) => {
   try {
     await deleteReport(req.params.id);
+    res.redirect("/admin");
+  } catch (e) {
+    res.status(400).render("error", {
+      title: "Error",
+      message: e.message || e
+    });
+  }
+});
+
+router.post("/reports/:id/escalate", requireAdmin, async (req, res) => {
+  try {
+    await escalateReport(req.params.id, req.session.user._id);
     res.redirect("/admin");
   } catch (e) {
     res.status(400).render("error", {

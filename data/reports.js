@@ -63,9 +63,22 @@ const getAllReports = async () => {
   const reportsCollection = await reports();
 
   const allReports = await reportsCollection
-    .find({})
-    .sort({ createdAt: -1 })
-    .toArray();
+  .aggregate([
+    {
+      $addFields: {
+        statusPriority: {
+          $cond: [{ $eq: ["$status", "escalated"] }, 1, 0]
+        }
+      }
+    },
+    {
+      $sort: {
+        statusPriority: -1,
+        createdAt: -1
+      }
+    }
+  ])
+  .toArray();
 
   return allReports.map((report) => {
     report._id = report._id.toString();
@@ -121,7 +134,32 @@ const deleteReport = async (reportId) => {
   return true;
 };
 
+const escalateReport = async (reportId, adminId) => {
+  reportId = checkId(reportId, "Report ID");
+  adminId = checkId(adminId, "Admin ID");
+
+  const reportsCollection = await reports();
+
+  const updateInfo = await reportsCollection.updateOne(
+    { _id: new ObjectId(reportId) },
+    {
+      $set: {
+        status: "escalated",
+        reviewedBy: new ObjectId(adminId),
+        reviewedAt: new Date(),
+        updatedAt: new Date()
+      }
+    }
+  );
+
+  if (updateInfo.matchedCount === 0) {
+    throw `No report found with id ${reportId}`;
+  }
+
+  return true;
+};
 
 
-export { createReport, getReportById, getReportsByUser, getAllReports,markReportReviewed, deleteReport };
+
+export { createReport, getReportById, getReportsByUser, getAllReports,markReportReviewed, escalateReport, deleteReport };
  
