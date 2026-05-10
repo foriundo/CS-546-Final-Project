@@ -132,10 +132,49 @@ router.post("/:id/edit", requireAdmin, async (req, res) => {
     if (!ObjectId.isValid(req.params.id)) {
       return res.status(400).render("error", { title: "Error", message: "Invalid center id" });
     }
-
+    
+    const phoneRegex = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+    const websiteRegex = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/.*)?$/;
     const validTimeRange = /^((0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM) - (0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)|Closed|Unavailable)$/i;
-
     const hourFields = [ "mon_open", "tue_open", "wed_open", "thu_open", "fri_open", "sat_open", "sun_open"];
+
+    if (req.body.full_location_phone_number) {
+
+      req.body.full_location_phone_number = req.body.full_location_phone_number.trim();
+
+      if ( req.body.full_location_phone_number.toLowerCase() === "n/a") {
+        req.body.full_location_phone_number = "N/A";
+      }
+
+      if ( req.body.full_location_phone_number !== "N/A" && !phoneRegex.test(req.body.full_location_phone_number) ) {
+
+        return res.status(400).render("centers/edit", { title: "Edit Center", error: "Phone number must be a valid 10 digit phone number", center: {
+            _id: req.params.id,
+            ...req.body
+          }
+        });
+
+      }
+    }
+
+    if (req.body.website) {
+
+      req.body.website = req.body.website.trim();
+
+      if (req.body.website.toLowerCase() === "n/a") {
+        req.body.website = "N/A";
+      }
+
+      if ( req.body.website !== "N/A" && !websiteRegex.test(req.body.website)) {
+
+        return res.status(400).render("centers/edit", { title: "Edit Center", error: "Website must be a valid URL", center: {
+            _id: req.params.id,
+            ...req.body
+          }
+        });
+
+      }
+    }
 
     for (let field of hourFields) {
 

@@ -164,8 +164,29 @@ const checkCenterFields = (centerData) => {
     thu_open: thu_open?.trim() || "Unavailable",
     fri_open: fri_open?.trim() || "Unavailable",
     sat_open: sat_open?.trim() || "Unavailable",
-    sun_open: sun_open?.trim() || "Unavailable"
-  };
+    sun_open: sun_open?.trim() || "Unavailable",
+    technology_related_courses: centerData.technology_related_courses || "N",
+    productivity_tools_ex_using: centerData.productivity_tools_ex_using || "N",
+    job_readiness_ex_resume_help: centerData.job_readiness_ex_resume_help || "N",
+    education_ex_personal_growth: centerData.education_ex_personal_growth || "N",
+    media_and_entertainment_ex: centerData.media_and_entertainment_ex || "N",
+    certifications_ex_in_software: centerData.certifications_ex_in_software || "N",
+    digital_literacy: centerData.digital_literacy || "N",
+    
+    full_location_phone_number:
+      centerData.full_location_phone_number?.trim().toUpperCase() === "N/A" ? "N/A" : centerData.full_location_phone_number?.trim() || "N/A",
+
+  url: {
+    url:
+      centerData.website?.trim().toUpperCase() === "N/A" ? "N/A" : centerData.website?.trim() || "N/A"
+  },
+
+  wheelchair_accessible:
+    centerData.wheelchair_accessible || "N",
+
+  assistive_technology:
+    centerData.assistive_technology || "N"
+    };
 };
 
 const createCenter = async (centerData) => {

@@ -102,7 +102,119 @@
     title="Use format like 8:00 AM - 4:00 PM, Closed, or Unavailable"
   >
 
-  <button type="submit">Save Changes</button>
+  <h2>Contact</h2>
+
+  <label for="full_location_phone_number">Phone</label>
+  <input 
+    type="tel" 
+    id="full_location_phone_number" 
+    name="full_location_phone_number" 
+    value="{{#if center.full_location_phone_number}}{{center.full_location_phone_number}}{{else}}N/A{{/if}}"
+    placeholder="(212) 281-1349 or N/A"
+    pattern="(\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[Nn]\/[Aa])"
+    title="Use format (212) 281-1349, 212-281-1349, or N/A"
+    required
+  >
+
+  <label for="website">Website</label>
+  <input 
+    type="text" 
+    id="website" 
+    name="website" 
+    value="{{#if center.url.url}}{{center.url.url}}{{else}}N/A{{/if}}" 
+    placeholder="https://example.com or N/A"
+    pattern="(https://.*|http://.*|[Nn]\/[Aa])"
+    title="Use a valid website like https://example.com, or N/A"
+  >
+
+  <h2>Accessibility</h2>
+
+  <label for="wheelchair_accessible">Wheelchair Accessible</label>
+  <select id="wheelchair_accessible" name="wheelchair_accessible">
+    <option value="Y" {{#if (eq center.wheelchair_accessible "Y")}}selected{{/if}}>Yes</option>
+    <option value="N" {{#if (eq center.wheelchair_accessible "N")}}selected{{/if}}>No</option>
+  </select>
+
+  <label for="assistive_technology">Assistive Technology</label>
+  <select id="assistive_technology" name="assistive_technology">
+    <option value="Y" {{#if (eq center.assistive_technology "Y")}}selected{{/if}}>Yes</option>
+    <option value="N" {{#if (eq center.assistive_technology "N")}}selected{{/if}}>No</option>
+  </select>
+
+  <h2>Course Offerings</h2>
+
+  <label>
+  <input 
+      type="checkbox" 
+      name="technology_related_courses" 
+      value="Y" 
+      {{#if (eq center.technology_related_courses "Y")}}checked{{/if}}
+    >
+    Technology Related Courses
+  </label>
+
+  <label>
+    <input 
+      type="checkbox" 
+      name="productivity_tools_ex_using" 
+      value="Y" 
+      {{#if (eq center.productivity_tools_ex_using "Y")}}checked{{/if}}
+    >
+    Productivity Tools
+  </label>
+
+  <label>
+    <input 
+      type="checkbox" 
+      name="job_readiness_ex_resume_help" 
+      value="Y" 
+      {{#if (eq center.job_readiness_ex_resume_help "Y")}}checked{{/if}}
+    >
+    Job Readiness
+  </label>
+
+  <label>
+    <input 
+      type="checkbox" 
+      name="education_ex_personal_growth" 
+      value="Y" 
+      {{#if (eq center.education_ex_personal_growth "Y")}}checked{{/if}}
+    >
+    Education / Personal Growth
+  </label>
+
+  <label>
+    <input 
+      type="checkbox" 
+      name="media_and_entertainment_ex" 
+      value="Y" 
+      {{#if (eq center.media_and_entertainment_ex "Y")}}checked{{/if}}
+    >
+    Media and Entertainment
+  </label>
+
+  <label>
+    <input 
+      type="checkbox" 
+      name="certifications_ex_in_software" 
+      value="Y" 
+      {{#if (eq center.certifications_ex_in_software "Y")}}checked{{/if}}
+    >
+    Certifications
+  </label>
+
+  <label>
+    <input 
+      type="checkbox" 
+      name="digital_literacy" 
+      value="Y" 
+      {{#if (eq center.digital_literacy "Y")}}checked{{/if}}
+    >
+    Digital Literacy
+  </label>
+  
+<br>
+<button type="submit">Save Changes</button>
 </form>
 
 <p>
