@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const issueType = document.getElementById('issue-types').value;
             const description = document.getElementById('issue').value;
             const successOrFailure = document.getElementById('report-success-failure');
+
+            if (!description.trim()) {
+                successOrFailure.textContent = 'Nice try, but you need to add an actual description.';
+                return;
+            }
+
             const response = await fetch(`/centers/${centerId}/report`, {
                 method: 'POST',
                 headers: {
